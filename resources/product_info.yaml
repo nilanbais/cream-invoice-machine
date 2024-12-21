@@ -1,0 +1,8 @@
+Gyproc Stucpasta 1:
+    - EAN nummer: 8711149001750
+    - unit: 20 kg
+    - prijs: €54.49   # '€' -> altgr + 5
+Gyproc Stucpasta 2:
+    - EAN nummer: 8711149001743
+    - unit: 5 kg
+    - prijs: €15.49   # '€' -> altgr + 5
