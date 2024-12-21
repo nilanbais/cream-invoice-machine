@@ -4,7 +4,7 @@ Sctipt containing the invoice generator.
 This class is responsible for handling the input data structure 
 and call the correct functionality for generating the pdf pages.
 """
-import os
+
 from cream_invoice_machine.utils.invoice_utils.invoice_class import InvoicePDF
 from cream_invoice_machine.utils.invoice_utils.invoice_class import InvoiceDetails, InvoiceItems
 
