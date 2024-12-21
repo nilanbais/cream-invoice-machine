@@ -1,0 +1,7 @@
+invoice: test-invoice-number
+date: auto  # genereert de datum van genereren van de factuur
+klant-info:
+  - naam: Dennis
+  - adres: 0223 woning 101B
+  - postcode: 2020 BZ
+  - plaats: Fuck Texel
