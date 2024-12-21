@@ -4,7 +4,21 @@ Sctipt containing the invoice generator.
 This class is responsible for handling the input data structure 
 and call the correct functionality for generating the pdf pages.
 """
+import os
 from cream_invoice_machine.utils.invoice_utils.invoice_class import InvoicePDF
+from cream_invoice_machine.utils.invoice_utils.invoice_class import InvoiceDetails, InvoiceItems
+
+
+
+def invoice_generator(invoice_details: InvoiceDetails, invoice_items: InvoiceItems, output_path: str) -> InvoicePDF:
+    pdf_object = InvoicePDF()
+    font_path = os.path.join('resources', 'fonts', "DejaVuSans.ttf")
+    pdf_object.add_font("DejaVu", style="", fname=font_path)
+    pdf_object.add_page()
+    pdf_object.add_invoice_details(invoice_details)
+    pdf_object.add_invoice_items(invoice_items)
+    pdf_object.output(output_path)
+
 
 
 # TODO - Denk of deze wel echt nodig is. Misschien is het beter om the class alle input data los aan te bieden.
