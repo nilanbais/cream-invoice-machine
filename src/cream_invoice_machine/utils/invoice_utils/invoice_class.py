@@ -1,3 +1,9 @@
+"""
+Sctipt containing the invoice class. 
+
+This class is responsible for and implements the structure of 
+the generated pdf pages.
+"""
 from fpdf import FPDF
 
 class InvoicePDF(FPDF):
