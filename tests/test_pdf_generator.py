@@ -14,7 +14,7 @@ class TestPDFGenerator(unittest.TestCase):
         self.invoice_details = InvoiceDetails(
             invoice_number="test invoice number 100",
             date='21-12-2024',
-            customer_address='0223 woning 101B, 1010 SH Fuck Texel test',
+            customer_address='0223 woning 101B, 1010 SH Fuck Texel',
             customer_name="de-nice"
         )
         self.items: InvoiceItems = invoice_items_from_list([

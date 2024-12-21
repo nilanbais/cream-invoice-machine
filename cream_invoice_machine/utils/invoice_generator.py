@@ -12,11 +12,10 @@ from cream_invoice_machine.utils.invoice_utils.invoice_class import InvoiceDetai
 
 def invoice_generator(invoice_details: InvoiceDetails, invoice_items: InvoiceItems, output_path: str) -> InvoicePDF:
     pdf_object = InvoicePDF()
-    font_path = os.path.join('resources', 'fonts', "DejaVuSans.ttf")
-    pdf_object.add_font("DejaVu", style="", fname=font_path)
     pdf_object.add_page()
     pdf_object.add_invoice_details(invoice_details)
     pdf_object.add_invoice_items(invoice_items)
+    pdf_object.add_corp_details()
     pdf_object.output(output_path)
 
 
