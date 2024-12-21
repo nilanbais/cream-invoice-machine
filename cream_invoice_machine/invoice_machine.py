@@ -12,6 +12,15 @@ import os
 from datetime import datetime
 
 def main() -> None:
+    # config env variables (oragisation info among other standard variables)
+
+    # get list of input files
+
+    # exe -> for file in list of files do:
+        # read file
+        # create invoice
+        # store invoice
+        
     print("shiiii")
 
 if __name__ == "__main__":

@@ -2,7 +2,6 @@
 Scripts to test functionality of the file reader.
 """
 import unittest
-import os
 from cream_invoice_machine.utils.file_reader import read_yaml
 
 class TestPDFGenerator(unittest.TestCase):
@@ -14,6 +13,7 @@ class TestPDFGenerator(unittest.TestCase):
         self.testcase_setup()
         test_result = read_yaml(path=self.input_file)
         self.assertTrue(test_result, None)
+        print(test_result)
 
 
 
