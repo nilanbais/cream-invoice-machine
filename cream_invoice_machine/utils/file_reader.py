@@ -2,7 +2,10 @@
 Script/functionalities to handle reading data from files.
 """
 import os
+import configparser
+
 import yaml
+
 
 def read_yaml(path: str) -> dict:
     """Reads .yaml-file and returns a py-dict"""
@@ -14,3 +17,9 @@ def read_yaml(path: str) -> dict:
             print(exception)
 
     return file_content
+
+
+def read_env_variable(variable_name: str) -> None:
+    config = configparser.ConfigParser()
+    config.read('.env')
+    return config['paths'][variable_name]

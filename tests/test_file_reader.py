@@ -2,7 +2,7 @@
 Scripts to test functionality of the file reader.
 """
 import unittest
-from cream_invoice_machine.utils.file_reader import read_yaml
+from cream_invoice_machine.utils.file_reader import read_yaml, read_env_variable
 
 class TestPDFGenerator(unittest.TestCase):
     
@@ -15,6 +15,9 @@ class TestPDFGenerator(unittest.TestCase):
         self.assertTrue(test_result, None)
         print(test_result)
 
+    def test_reading_env_variables(self) -> None:
+        test_result: str = read_env_variable("CORP_INFO_PATH")
+        self.assertTrue(test_result, None)
 
 
 if __name__ == '__main__':
