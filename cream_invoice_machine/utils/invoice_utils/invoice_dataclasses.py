@@ -26,6 +26,14 @@ class InvoiceItems:
 class CorpDetails:
     name: str
     address: str
+    postcost: str
+    city: str
+    phone: str
+    email: str
+    kvk_number: str
+    btw_number: str
+    iban: str
+
 
 def invoice_items_from_list(input_list: List[dict]) -> InvoiceItems:
     # Convert dictionaries to InvoiceItem instances
