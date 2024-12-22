@@ -5,7 +5,7 @@ This class is responsible for handling the input data structure
 and call the correct functionality for generating the pdf pages.
 """
 
-from cream_invoice_machine.utils.invoice_utils.invoice_class import InvoicePDF
+from cream_invoice_machine.utils.invoice_utils.invoice_class import InvoicePDF, TESTInvoicePDF
 from cream_invoice_machine.utils.invoice_utils.invoice_dataclasses import InvoiceDetails, InvoiceItems
 
 
@@ -18,6 +18,12 @@ def invoice_generator(invoice_details: InvoiceDetails, invoice_items: InvoiceIte
     pdf_object.add_invoice_items(invoice_items)
     pdf_object.output(output_path)
 
+
+def invoice_generator_test(invoice_details: InvoiceDetails, invoice_items: InvoiceItems, output_path: str) -> InvoicePDF:
+    pdf_object = TESTInvoicePDF()
+    pdf_object.add_client_info(invoice_details.customer_name, invoice_details.customer_address)
+    pdf_object.add_invoice_table(invoice_items)
+    pdf_object.output(output_path)
 
 
 # TODO - Denk of deze wel echt nodig is. Misschien is het beter om the class alle input data los aan te bieden.

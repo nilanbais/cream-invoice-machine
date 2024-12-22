@@ -4,6 +4,7 @@ Sctipt containing the invoice class.
 This class is responsible for and implements the structure of 
 the generated pdf pages.
 """
+import os
 from fpdf import FPDF, XPos, YPos
 
 from typing import List
@@ -76,7 +77,7 @@ class InvoicePDF(FPDF):
         for item in invoice_items.items:
             description = item.description
             quantity = item.quantity
-            price = item.price
+            price = item.unit_price
             line_total = quantity * price
             total_amount += line_total
 
@@ -98,3 +99,64 @@ class InvoicePDF(FPDF):
         self.cell(30, 10, f"{btw_amount:.2f} EUR", border=1, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
         self.cell(160, 10, 'Totaal incl. BTW:', border=1)
         self.cell(30, 10, f"{total_incl_btw:.2f} EUR", border=1, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+
+
+class TESTInvoicePDF(FPDF):
+    def __init__(self, orientation='P', unit='mm', format='A4'):
+        super().__init__(orientation, unit, format)
+        self.add_fonts()
+        self.set_auto_page_break(auto=True, margin=15)
+        self.add_page()
+        self.set_margins(10, 10, 10)
+
+    def add_fonts(self):
+        # Voeg aangepaste lettertypen toe als dat nodig is
+        self.add_font('DejaVu', '', os.path.abspath(os.path.join('resources', 'fonts', 'DejaVuSansCondensed.ttf')), uni=True)
+        self.add_font('DejaVu', 'B', os.path.abspath(os.path.join('resources', 'fonts', 'DejaVuSans-Bold.ttf')), uni=True)
+        self.add_font('DejaVu', 'I', os.path.abspath(os.path.join('resources', 'fonts', 'DejaVuSans-Oblique.ttf')), uni=True)
+
+    def header(self):
+        # Voeg een logo toe
+        self.image('C:\\Users\\NilanBais\\Documents\\Github\\cream-invoice-machine\\resources\\logo\\logo_white.png', 10, 8, 33)
+        self.set_font('DejaVu', 'B', 12)
+        self.cell(0, 10, 'Factuur', 0, 1, 'C')
+        self.ln(10)
+
+    def footer(self):
+        self.set_y(-35)
+        self.multi_cell(0, 10, 
+            "Te betalen binnen 30 dagen (voor DD-MM-YYYY) op rekeningnummer NL12BANK0123456789\n"
+            "t.n.v. STUKADOORSBEDRIJF onder vermelding van klantnummer en factuurnummer.", 
+            align='C'
+        )
+        self.set_font('DejaVu', 'I', 8)
+        self.cell(0, 10, f'Pagina {self.page_no()}', 0, 0, 'C')
+
+    def add_client_info(self, client_name, client_address):
+        self.set_font('DejaVu', '', 10)
+        self.cell(0, 10, f'Klantnaam: {client_name}', 0, 1)
+        self.cell(0, 10, f'Adres: {client_address}', 0, 1)
+        self.ln(10)
+
+    def add_invoice_table(self, items: InvoiceItems):
+        self.set_font('DejaVu', 'B', 10)
+        self.set_fill_color(200, 220, 255)
+        self.cell(40, 10, 'Omschrijving', 1, 0, 'C', 1)
+        self.cell(30, 10, 'Aantal', 1, 0, 'C', 1)
+        self.cell(30, 10, 'Prijs per stuk', 1, 0, 'C', 1)
+        self.cell(30, 10, 'Totaal', 1, 1, 'C', 1)
+        self.set_font('DejaVu', '', 10)
+        self.set_fill_color(245, 245, 245)
+        fill = False
+        for item in items.items:
+            self.cell(40, 10, item.description, 1, 0, 'L', fill)
+            self.cell(30, 10, str(item.quantity), 1, 0, 'C', fill)
+            self.cell(30, 10, str(item.unit_price), 1, 0, 'R', fill)
+            self.cell(30, 10, str(item.total), 1, 1, 'R', fill)
+            fill = not fill
+
+    def add_total_amount(self, total):
+        self.set_font('DejaVu', 'B', 10)
+        self.cell(100, 10, '', 0, 0)
+        self.cell(30, 10, 'Totaalbedrag:', 0, 0, 'R')
+        self.cell(30, 10, f"€ {total:.2f}", 1, 1, 'R')

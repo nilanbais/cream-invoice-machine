@@ -16,7 +16,8 @@ class InvoiceDetails:
 class InvoiceItem:
     description: str
     quantity: int
-    price: float
+    unit_price: float
+    total: int
 
 
 @dataclass
