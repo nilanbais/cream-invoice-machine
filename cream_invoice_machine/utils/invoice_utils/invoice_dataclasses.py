@@ -23,7 +23,7 @@ class InvoiceItems:
     items: List[InvoiceItem]
 
 @dataclass
-class CorpDetails:
+class CorpInvoiceDetails:
     name: str
     address: str
     postcost: str
