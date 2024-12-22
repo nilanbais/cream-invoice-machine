@@ -18,15 +18,17 @@ class InvoiceItem:
     quantity: int
     price: float
 
+
 @dataclass
 class InvoiceItems:
     items: List[InvoiceItem]
+
 
 @dataclass
 class CorpInvoiceDetails:
     name: str
     address: str
-    postcost: str
+    postcode: str
     city: str
     phone: str
     email: str

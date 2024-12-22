@@ -9,7 +9,7 @@ import yaml
 
 def read_yaml(path: str) -> dict:
     """Reads .yaml-file and returns a py-dict"""
-    abs_path: str = os.path.abspath(path)
+    abs_path: str = os.path.normpath(os.path.abspath(path))
     with open(abs_path) as yaml_file:
         try:
             file_content = yaml.safe_load(yaml_file)
@@ -22,4 +22,4 @@ def read_yaml(path: str) -> dict:
 def read_env_variable(variable_name: str) -> None:
     config = configparser.ConfigParser()
     config.read('.env')
-    return config['paths'][variable_name]
+    return config['paths'][variable_name].strip('\'')
