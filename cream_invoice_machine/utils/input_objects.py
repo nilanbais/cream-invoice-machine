@@ -8,7 +8,8 @@ from datetime import datetime
 from abc import ABC, abstractmethod
 
 from cream_invoice_machine.utils.file_reader import read_yaml, read_env_variable
-from cream_invoice_machine.utils.invoice_utils.invoice_dataclasses import CompDetails
+from cream_invoice_machine.utils.helper_functions import flatten_list_of_dicts
+from cream_invoice_machine.utils.invoice_utils.invoice_dataclasses import CompDetails, ProductDetails, ProductDetailsList
 
 
 class InfoInputObjectBase(ABC):
@@ -23,6 +24,10 @@ class InfoInputObjectBase(ABC):
     def object_details(self):
         ...
 
+    @abstractmethod
+    def set_object_details(self) -> None:
+        ...
+
 
 class CompanyInfoInput(InfoInputObjectBase):
 
@@ -32,7 +37,6 @@ class CompanyInfoInput(InfoInputObjectBase):
 
     def __init__(self, auto_read: bool = False):
         if auto_read:
-            print(self._file_path, type(self._file_path))
             self._read_input()
 
     def set_input_file_path(self, new_path: str) -> None:
@@ -41,7 +45,7 @@ class CompanyInfoInput(InfoInputObjectBase):
     def _read_input(self) -> None:
         self._raw_data = read_yaml(self._file_path)
 
-    def set_corp_invoice_details(self) -> None:
+    def set_object_details(self) -> None:
         self._company_details = CompDetails(
             name=self._raw_data['naam'],
             address=self._raw_data['adres'],
@@ -59,14 +63,14 @@ class CompanyInfoInput(InfoInputObjectBase):
         return self._company_details
     
 
-class ProductInfoInput:
+class ProductInfoInput(InfoInputObjectBase):
 
     _file_path: str = read_env_variable("PRODUCT_INFO_PATH")
     _raw_data: dict = None
+    object_details: ProductDetailsList = ProductDetailsList()
 
     def __init__(self, auto_read: bool = False):
         if auto_read:
-            print(self._file_path, type(self._file_path))
             self._read_input()
 
     def set_input_file_path(self, new_path: str) -> None:
@@ -74,6 +78,17 @@ class ProductInfoInput:
 
     def _read_input(self) -> None:
         self._raw_data = read_yaml(self._file_path)
+
+    def set_object_details(self) -> None:
+        for product_name, product_info in self._raw_data.items():
+            product_info: dict = flatten_list_of_dicts(product_info)
+            item_details = ProductDetails(
+                name=product_name,
+                unit=product_info['unit'],
+                price=product_info['prijs'],
+                ean_number=product_info['EAN nummer']
+            )
+            self.object_details.items.append(item_details)
 
 
 

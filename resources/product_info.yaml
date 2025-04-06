@@ -1,9 +1,8 @@
-wanden:
-  - prijs: 20.00
-plafond:
-  - prijs: 25.00
-hoeknaden:
-  - prijs: 15.00
-microcement:
-  - prijs: 125.00
-marge: 9
+Gyproc Stucpasta 1:
+  - EAN nummer: 8711149001750
+  - unit: 20 kg
+  - prijs: 54.49
+Gyproc Stucpasta 2:
+  - EAN nummer: 8711149001743
+  - unit: 5 kg
+  - prijs: 15.49
