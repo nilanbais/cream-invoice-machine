@@ -22,7 +22,4 @@ oppervlak:
       - bijkeuken: 11
 extra:
   - hoeknaden: 13
-  - microcement:
-      - oppervlak: 8
-      - meterprijs: 125
-      - bijtelling: 9
+  - microcement: 8

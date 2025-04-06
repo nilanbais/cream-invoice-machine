@@ -26,7 +26,7 @@ class InvoiceItems:
 
 
 @dataclass
-class CorpInvoiceDetails:
+class CompDetails:
     name: str
     address: str
     postcode: str
@@ -36,10 +36,3 @@ class CorpInvoiceDetails:
     kvk_number: str
     btw_number: str
     iban: str
-
-
-def invoice_items_from_list(input_list: List[dict]) -> InvoiceItems:
-    # Convert dictionaries to InvoiceItem instances
-    invoice_items = [InvoiceItem(**item) for item in input_list]
-    return InvoiceItems(items=invoice_items)
-    

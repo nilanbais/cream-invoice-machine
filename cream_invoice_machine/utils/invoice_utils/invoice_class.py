@@ -10,7 +10,7 @@ from fpdf import FPDF, XPos, YPos
 from typing import List
 
 from cream_invoice_machine.templates.pdf import InvoiceHeaderTemplate
-from cream_invoice_machine.utils.invoice_utils.invoice_dataclasses import InvoiceDetails, InvoiceItems
+from cream_invoice_machine.utils.invoice_utils.invoice_dataclasses import InvoiceDetails, InvoiceItems, CompDetails
 
 
 
@@ -45,18 +45,18 @@ class InvoicePDF(FPDF):
         self.cell(100, 10, f"Adres klant: {invoice_details.customer_address}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
         self.ln(10)
 
-    def add_corp_details(self):
+    def add_company_details(self, company_details: CompDetails):
         self.set_font('Helvetica', 'B', 8)
         self.set_xy(140, 20)
         self.multi_cell(0, 8, 
-            "UW BEDRIJFSNAAM\n"
-            "Adres\n"
-            "Postcode en plaats\n"
-            "Telefoon\n"
-            "E-mail\n"
-            "KvK-nummer\n"
-            "Btw-nummer\n"
-            "IBAN", 
+            f"{company_details.name}\n"
+            f"{company_details.address}\n"
+            f"{company_details.postcode}, {company_details.city}\n"
+            f"{company_details.phone}\n"
+            f"{company_details.email}\n"
+            f"{company_details.kvk_number}\n"
+            f"{company_details.btw_number}\n"
+            f"{company_details.iban}",
             align='L'
         )
 

@@ -7,14 +7,14 @@ import os
 from datetime import datetime
 
 from cream_invoice_machine.utils.file_reader import read_yaml, read_env_variable
-from cream_invoice_machine.utils.invoice_utils.invoice_dataclasses import CorpInvoiceDetails
+from cream_invoice_machine.utils.invoice_utils.invoice_dataclasses import CompDetails
 
 
-class CorpInfoInput:
+class CompanyInfoInput:
 
-    _file_path: str = read_env_variable("CORP_INFO_PATH")
+    _file_path: str = read_env_variable("COMPANY_INFO_PATH")
     _raw_data: dict = None
-    _invoice_details: CorpInvoiceDetails = None
+    _company_details: CompDetails = None
 
     def __init__(self, auto_read: bool = False):
         if auto_read:
@@ -28,7 +28,7 @@ class CorpInfoInput:
         self._raw_data = read_yaml(self._file_path)
 
     def set_corp_invoice_details(self) -> None:
-        self._invoice_details = CorpInvoiceDetails(
+        self._company_details = CompDetails(
             name=self._raw_data['naam'],
             address=self._raw_data['adres'],
             postcode=self._raw_data['postcode'],
@@ -41,8 +41,8 @@ class CorpInfoInput:
         )
     
     @property
-    def CorpInvoiceDetails(self) -> CorpInvoiceDetails:
-        return self._invoice_details
+    def CompDetails(self) -> CompDetails:
+        return self._company_details
     
 
 class ProductInfoInput:

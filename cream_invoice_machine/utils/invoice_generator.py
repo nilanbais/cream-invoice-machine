@@ -6,15 +6,15 @@ and call the correct functionality for generating the pdf pages.
 """
 
 from cream_invoice_machine.utils.invoice_utils.invoice_class import InvoicePDF, TESTInvoicePDF
-from cream_invoice_machine.utils.invoice_utils.invoice_dataclasses import InvoiceDetails, InvoiceItems
+from cream_invoice_machine.utils.invoice_utils.invoice_dataclasses import InvoiceDetails, InvoiceItems, CompDetails
 
 
 
-def invoice_generator(invoice_details: InvoiceDetails, invoice_items: InvoiceItems, output_path: str) -> InvoicePDF:
+def invoice_generator(invoice_details: InvoiceDetails, invoice_items: InvoiceItems, company_details: CompDetails, output_path: str) -> InvoicePDF:
     pdf_object = InvoicePDF()
     pdf_object.add_page()
     pdf_object.add_invoice_details(invoice_details)
-    pdf_object.add_corp_details()
+    pdf_object.add_company_details(company_details)
     pdf_object.add_invoice_items(invoice_items)
     pdf_object.output(output_path)
 
