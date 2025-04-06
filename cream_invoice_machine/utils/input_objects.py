@@ -5,12 +5,26 @@ This includes the input .yaml-files
 """
 import os
 from datetime import datetime
+from abc import ABC, abstractmethod
 
 from cream_invoice_machine.utils.file_reader import read_yaml, read_env_variable
 from cream_invoice_machine.utils.invoice_utils.invoice_dataclasses import CompDetails
 
 
-class CompanyInfoInput:
+class InfoInputObjectBase(ABC):
+
+    @property
+    @abstractmethod
+    def _file_path(self):
+        ...
+
+    @property
+    @abstractmethod
+    def object_details(self):
+        ...
+
+
+class CompanyInfoInput(InfoInputObjectBase):
 
     _file_path: str = read_env_variable("COMPANY_INFO_PATH")
     _raw_data: dict = None
@@ -41,7 +55,7 @@ class CompanyInfoInput:
         )
     
     @property
-    def CompDetails(self) -> CompDetails:
+    def object_details(self) -> CompDetails:
         return self._company_details
     
 
