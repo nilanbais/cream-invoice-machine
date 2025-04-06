@@ -10,12 +10,14 @@ class TestFileReader(unittest.TestCase):
         self.input_file = "input\\test_input.yaml"
 
     def test_generating_pdf_expected_input(self) -> None:
+        print(f"Running: {self._testMethodName}")
         self.testcase_setup()
         test_result = read_yaml(path=self.input_file)
         self.assertTrue(test_result, None)
         print(test_result)
 
     def test_reading_env_variables(self) -> None:
+        print(f"Running: {self._testMethodName}")
         test_result: str = read_env_variable("CORP_INFO_PATH")
         self.assertTrue(test_result, None)
 

@@ -12,7 +12,7 @@ class TestPDFGenerator(unittest.TestCase):
     def testcase_setup(self) -> None:
         self.input_file = ""
         self.output_file = "output\\test_output_flex_template_test.pdf"
-        
+
         self.invoice_details = InvoiceDetails(
             invoice_number="test invoice number 100",
             date='21-12-2024',
@@ -37,6 +37,7 @@ class TestPDFGenerator(unittest.TestCase):
         )
 
     def test_generating_pdf_expected_input(self) -> None:
+        print(f"Running: {self._testMethodName}")
         self.testcase_setup()
         invoice_generator(
             invoice_details=self.invoice_details, 
