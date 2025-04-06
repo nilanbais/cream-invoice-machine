@@ -109,9 +109,7 @@ class JobInfoInput(InfoInputObjectBase):
         self._raw_data = read_yaml(self._file_path)
 
     def set_object_details(self) -> None:
-        print("self._raw_data", self._raw_data)
         for job_name, job_info in self._raw_data.items():
-            print("job_info", job_info)
             job_info: dict = flatten_list_of_dicts(job_info)
             item_details = JobInfo(
                 name=job_name,
