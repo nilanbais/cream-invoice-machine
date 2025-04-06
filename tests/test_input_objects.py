@@ -5,7 +5,7 @@ import unittest
 from datetime import datetime
 
 from cream_invoice_machine.utils.invoice_generator import invoice_generator
-from cream_invoice_machine.utils.input_objects import CompanyInfoInput, ProductInfoInput
+from cream_invoice_machine.utils.input_objects import CompanyInfoInput, ProductInfoInput, JobInfoInput
 
 
 class TestCompanyInfoInputObject(unittest.TestCase):
@@ -64,7 +64,7 @@ class TestProductInfoInputObject(unittest.TestCase):
 
     def test_product_input_set_data(self) -> None:
         self.testcase_setup()
-        test_obj = ProductInfoInput(auto_read=True)
+        test_obj = JobInfoInput(auto_read=True)
 
         test_obj.set_object_details()
 

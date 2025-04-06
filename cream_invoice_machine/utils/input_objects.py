@@ -67,7 +67,7 @@ class ProductInfoInput(InfoInputObjectBase):
 
     _file_path: str = read_env_variable("PRODUCT_INFO_PATH")
     _raw_data: dict = None
-    object_details: ProductDetailsList = ProductDetailsList
+    object_details: ProductDetailsList = ProductDetailsList()
 
     def __init__(self, auto_read: bool = False):
         if auto_read:
@@ -109,12 +109,13 @@ class JobInfoInput(InfoInputObjectBase):
         self._raw_data = read_yaml(self._file_path)
 
     def set_object_details(self) -> None:
+        print("self._raw_data", self._raw_data)
         for job_name, job_info in self._raw_data.items():
+            print("job_info", job_info)
             job_info: dict = flatten_list_of_dicts(job_info)
             item_details = JobInfo(
                 name=job_name,
                 unit=job_info['unit'],
-                price=job_info['prijs'],
-                ean_number=job_info['EAN nummer']
+                price=job_info['prijs']
             )
             self.object_details.add(item_details)
