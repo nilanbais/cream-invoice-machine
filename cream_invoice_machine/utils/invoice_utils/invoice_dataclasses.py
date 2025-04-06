@@ -3,6 +3,7 @@
 from dataclasses import dataclass, field
 from typing import List, Generic, TypeVar
 
+TYPE_PLACEHOLDER = TypeVar('T')
 
 @dataclass
 class InvoiceDetails:
@@ -39,21 +40,38 @@ class CompDetails:
 
 
 @dataclass
+class DataListBase(Generic[TYPE_PLACEHOLDER]):
+    """
+    A generic base class for managing a list of typed entries.
+
+    This class should be subclassed with a specific type provided for TYPE_PLACEHOLDER.
+    For example: `class ProductList(DataListBase[Product])`.
+
+    Attributes:
+        entries (List[TYPE_PLACEHOLDER]): A list of items of a specified type. Defaults to an empty list.
+
+    Methods:
+        __init__(entries: List[TYPE_PLACEHOLDER] = []):
+            Initializes the object with an optional list of entries.
+
+        add(item: TYPE_PLACEHOLDER) -> None:
+            Adds a single item to the entries list.
+    """
+    entries: List[TYPE_PLACEHOLDER] = field(default_factory=list)
+
+    def __init__(self, entries: List[TYPE_PLACEHOLDER] = []) -> None:
+        self.entries = entries
+
+    def add(self, item: TYPE_PLACEHOLDER) -> None:
+        self.entries.append(item)
+
+
+@dataclass
 class ProductDetails:
     name: str
     unit: str
     price: float
     ean_number: int
-
-TYPE_PLACEHOLDER = TypeVar('T')
-
-@dataclass
-class DataListBase(Generic[TYPE_PLACEHOLDER]):
-    entries: List[TYPE_PLACEHOLDER] = field(default_factory=list)
-
-    def __init__(self, entries: List[TYPE_PLACEHOLDER] = []) -> None:
-        self.entries = entries
-    
 
 @dataclass
 class ProductDetailsList(DataListBase[ProductDetails]):
@@ -67,8 +85,5 @@ class JobInfo:
     unit: str
 
 @dataclass
-class JobTypeList:
-    jobs: List[JobInfo]
-
-    def __init__(self, jobs: List = []) -> None:
-        self.jobs = jobs
+class JobTypeList(DataListBase[JobInfo]):
+    pass
