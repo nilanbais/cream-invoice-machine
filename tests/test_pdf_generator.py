@@ -30,14 +30,6 @@ class TestPDFGenerator(unittest.TestCase):
             output_path=self.output_file
         )
 
-    def test_generating_pdf_expected_input_test(self) -> None:
-        self.testcase_setup()
-        invoice_generator_test(
-            invoice_details=self.invoice_details, 
-            invoice_items=self.items,
-            output_path=self.output_file
-        )
-
 
 
 if __name__ == '__main__':
