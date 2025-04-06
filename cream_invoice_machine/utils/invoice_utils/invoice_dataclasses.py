@@ -1,7 +1,7 @@
 
 
 from dataclasses import dataclass, field
-from typing import List
+from typing import List, Generic, TypeVar
 
 
 @dataclass
@@ -45,9 +45,30 @@ class ProductDetails:
     price: float
     ean_number: int
 
+TYPE_PLACEHOLDER = TypeVar('T')
+
 @dataclass
-class ProductDetailsList:
-    items: List[ProductDetails]
+class DataListBase(Generic[TYPE_PLACEHOLDER]):
+    entries: List[TYPE_PLACEHOLDER] = field(default_factory=list)
+
+    def __init__(self, entries: List[TYPE_PLACEHOLDER] = []) -> None:
+        self.entries = entries
     
-    def __init__(self, items: List = []) -> None:
-        self.items = items
+
+@dataclass
+class ProductDetailsList(DataListBase[ProductDetails]):
+    pass
+
+
+@dataclass
+class JobInfo:
+    name: str
+    price: float
+    unit: str
+
+@dataclass
+class JobTypeList:
+    jobs: List[JobInfo]
+
+    def __init__(self, jobs: List = []) -> None:
+        self.jobs = jobs
