@@ -4,7 +4,7 @@ Scripts to test functionality of the file reader.
 import unittest
 from cream_invoice_machine.utils.file_reader import read_yaml, read_env_variable
 
-class TestPDFGenerator(unittest.TestCase):
+class TestFileReader(unittest.TestCase):
     
     def testcase_setup(self) -> None:
         self.input_file = "input\\test_input.yaml"

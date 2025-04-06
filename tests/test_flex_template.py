@@ -6,7 +6,7 @@ from datetime import datetime
 
 from cream_invoice_machine.utils.invoice_generator import invoice_generator
 
-class TestPDFGenerator(unittest.TestCase):
+class TestFlexTemplate(unittest.TestCase):
     
     def testcase_setup(self) -> None:
         self.output_file = "output\\test_output_flex_template_test.pdf"

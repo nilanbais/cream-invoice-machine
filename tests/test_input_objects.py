@@ -8,7 +8,7 @@ from cream_invoice_machine.utils.invoice_generator import invoice_generator
 from cream_invoice_machine.utils.input_objects import CompanyInfoInput
 
 
-class TestPDFGenerator(unittest.TestCase):
+class TestInputObject(unittest.TestCase):
     
     def testcase_setup(self) -> None:
         self.output_file = "output\\test_output_flex_template_test.pdf"
