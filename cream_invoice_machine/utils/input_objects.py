@@ -28,6 +28,9 @@ class InfoInputObjectBase(ABC):
     def set_object_details(self) -> None:
         ...
 
+    def set_input_file_path(self, new_path: str) -> None:
+        self._file_path = new_path
+
 
 class CompanyInfoInput(InfoInputObjectBase):
 
@@ -38,9 +41,7 @@ class CompanyInfoInput(InfoInputObjectBase):
     def __init__(self, auto_read: bool = False):
         if auto_read:
             self._read_input()
-
-    def set_input_file_path(self, new_path: str) -> None:
-        self._file_path = new_path
+            self.set_object_details()
 
     def _read_input(self) -> None:
         self._raw_data = read_yaml(self._file_path)
@@ -72,9 +73,7 @@ class ProductInfoInput(InfoInputObjectBase):
     def __init__(self, auto_read: bool = False):
         if auto_read:
             self._read_input()
-
-    def set_input_file_path(self, new_path: str) -> None:
-        self._file_path = new_path
+            self.set_object_details()
 
     def _read_input(self) -> None:
         self._raw_data = read_yaml(self._file_path)
@@ -101,9 +100,7 @@ class JobInfoInput(InfoInputObjectBase):
     def __init__(self, auto_read: bool = False):
         if auto_read:
             self._read_input()
-    
-    def set_input_file_path(self, new_path: str) -> None:
-        self._file_path = new_path
+            self.set_object_details()
 
     def _read_input(self) -> None:
         self._raw_data = read_yaml(self._file_path)
