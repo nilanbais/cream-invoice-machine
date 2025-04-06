@@ -4,6 +4,7 @@ Scripts to test functionality of the pdf generator.
 import unittest
 from cream_invoice_machine.utils.invoice_generator import invoice_generator, invoice_generator_test
 from cream_invoice_machine.utils.invoice_utils.invoice_dataclasses import InvoiceDetails, InvoiceItems, CompDetails
+from cream_invoice_machine.utils.input_objects import CompanyInfoInput
 from cream_invoice_machine.utils.invoice_utils.utils import invoice_items_from_list
 
 
@@ -11,7 +12,6 @@ class TestPDFGenerator(unittest.TestCase):
     
     def testcase_setup(self) -> None:
         self.input_file = ""
-        self.output_file = "output\\test_output_flex_template_test.pdf"
 
         self.invoice_details = InvoiceDetails(
             invoice_number="test invoice number 100",
@@ -39,10 +39,25 @@ class TestPDFGenerator(unittest.TestCase):
     def test_generating_pdf_expected_input(self) -> None:
         print(f"Running: {self._testMethodName}")
         self.testcase_setup()
+        self.output_file = "output\\test_generating_pdf_expected_input_output.pdf"
         invoice_generator(
             invoice_details=self.invoice_details, 
             invoice_items=self.items,
             company_details=self.company_details,
+            output_path=self.output_file
+        )
+
+    def test_generating_pdf_with_yaml_files(self) -> None:
+        print(f"Running: {self._testMethodName}")
+        self.testcase_setup()
+        self.output_file = "output\\test_generating_pdf_with_yaml_files_output.pdf"
+        
+        company_details = CompanyInfoInput(auto_read=True)
+        
+        invoice_generator(
+            invoice_details=self.invoice_details, 
+            invoice_items=self.items,
+            company_details=company_details.object_details,
             output_path=self.output_file
         )
 
