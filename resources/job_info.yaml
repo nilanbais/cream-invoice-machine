@@ -1,0 +1,13 @@
+wanden:
+  - prijs: 20.00
+  - unit: "m2"
+plafond:
+  - prijs: 25.00
+  - unit: "m2"
+hoeknaden:
+  - prijs: 15.00
+  - unit: "ps"
+microcement:
+  - prijs: 125.00
+  - unit: "m2"
+marge: 9
