@@ -22,7 +22,7 @@ class InvoicePDF(FPDF):
     def header(self):
         # Bedrijfsnaam
         self.set_font('Helvetica', '', 12)
-        self.image('C:\\Users\\NilanBais\\Documents\\Github\\cream-invoice-machine\\resources\\logo\\logo_white.png', 10, 8, 33)  # Adjust the path and size as needed
+        self.image('cream-invoice-machine\\resources\\logo\\logo_white.png', 10, 8, 33)  # Adjust the path and size as needed
         self.cell(0, 10, "Factuur",  new_x=XPos.LMARGIN, new_y=YPos.NEXT, align="C")
         self.ln(10)  # Lijnbreuk
 

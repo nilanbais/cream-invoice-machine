@@ -21,7 +21,7 @@ def main() -> None:
         # create invoice
         # store invoice
         
-    print("shiiii")
+    print("empty func for now")
 
 if __name__ == "__main__":
     main()

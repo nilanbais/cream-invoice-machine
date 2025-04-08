@@ -9,7 +9,7 @@ class InvoiceHeaderTemplate:
 
     elements: List[dict] = [
         {
-            "name": "logo", "type": "I", "x1": 10, "y1": 8, "x2": 30, "y2": 20, "file": "C:\\Users\\NilanBais\\Documents\\Github\\cream-invoice-machine\\resources\\logo\\logo_white.png"
+            "name": "logo", "type": "I", "x1": 10, "y1": 8, "x2": 30, "y2": 20, "file": "cream-invoice-machine\\resources\\logo\\logo_white.png"
         },
         {
             "name": "title", "type": "T", "x1": 40, "y1": 10, "x2": 200, "y2": 20, "font": "helvetica", "size": 12, "align": "L", "text": ""
