@@ -6,11 +6,11 @@ and call the correct functionality for generating the pdf pages.
 """
 
 from cream_invoice_machine.utils.invoice_utils.invoice_class import InvoicePDF, TESTInvoicePDF
-from cream_invoice_machine.utils.invoice_utils.invoice_dataclasses import InvoiceDetails, InvoiceItems, CompDetails
+from cream_invoice_machine.utils.invoice_utils.invoice_dataclasses import InvoiceDetails, InvoiceLineItems, CompDetails
 
 
 
-def invoice_generator(invoice_details: InvoiceDetails, invoice_items: InvoiceItems, company_details: CompDetails, output_path: str) -> InvoicePDF:
+def invoice_generator(invoice_details: InvoiceDetails, invoice_items: InvoiceLineItems, company_details: CompDetails, output_path: str) -> InvoicePDF:
     pdf_object = InvoicePDF()
     pdf_object.add_page()
     pdf_object.add_invoice_details(invoice_details)
@@ -19,7 +19,7 @@ def invoice_generator(invoice_details: InvoiceDetails, invoice_items: InvoiceIte
     pdf_object.output(output_path)
 
 
-def invoice_generator_test(invoice_details: InvoiceDetails, invoice_items: InvoiceItems, output_path: str) -> InvoicePDF:
+def invoice_generator_test(invoice_details: InvoiceDetails, invoice_items: InvoiceLineItems, output_path: str) -> InvoicePDF:
     pdf_object = TESTInvoicePDF()
     pdf_object.add_client_info(invoice_details.customer_name, invoice_details.customer_address)
     pdf_object.add_invoice_table(invoice_items)

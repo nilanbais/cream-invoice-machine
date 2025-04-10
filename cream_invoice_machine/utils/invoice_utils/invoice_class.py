@@ -10,7 +10,7 @@ from fpdf import FPDF, XPos, YPos
 from typing import List
 
 from cream_invoice_machine.templates.pdf import InvoiceHeaderTemplate
-from cream_invoice_machine.utils.invoice_utils.invoice_dataclasses import InvoiceDetails, InvoiceItems, CompDetails
+from cream_invoice_machine.utils.invoice_utils.invoice_dataclasses import InvoiceDetails, InvoiceLineItems, CompDetails
 
 
 
@@ -60,7 +60,7 @@ class InvoicePDF(FPDF):
             align='L'
         )
 
-    def add_invoice_items(self, invoice_items: InvoiceItems):
+    def add_invoice_items(self, invoice_items: InvoiceLineItems):
         self.set_xy(10, 100)
         # Header for the items table
         self.set_font('Helvetica', '', 10)
@@ -138,7 +138,7 @@ class TESTInvoicePDF(FPDF):
         self.cell(0, 10, f'Adres: {client_address}', 0, 1)
         self.ln(10)
 
-    def add_invoice_table(self, items: InvoiceItems):
+    def add_invoice_table(self, items: InvoiceLineItems):
         self.set_font('DejaVu', 'B', 10)
         self.set_fill_color(200, 220, 255)
         self.cell(40, 10, 'Omschrijving', 1, 0, 'C', 1)

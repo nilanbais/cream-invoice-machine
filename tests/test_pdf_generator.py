@@ -4,7 +4,7 @@ Scripts to test functionality of the pdf generator.
 import os
 import unittest
 from cream_invoice_machine.utils.invoice_generator import invoice_generator, invoice_generator_test
-from cream_invoice_machine.utils.invoice_utils.invoice_dataclasses import InvoiceDetails, InvoiceItems, CompDetails
+from cream_invoice_machine.utils.invoice_utils.invoice_dataclasses import InvoiceDetails, InvoiceLineItems, CompDetails
 from cream_invoice_machine.utils.input_objects import CompanyInfoInput
 from cream_invoice_machine.utils.invoice_utils.utils import invoice_items_from_list
 
@@ -20,7 +20,7 @@ class TestPDFGenerator(unittest.TestCase):
             customer_address='0223 woning 101B, 1010 SH Plaats',
             customer_name="de-nice"
         )
-        self.items: InvoiceItems = invoice_items_from_list([
+        self.items: InvoiceLineItems = invoice_items_from_list([
             {"description": "Stucwerk muren", "quantity": 20, "unit_price": 18.00, "total": 360},
             {"description": "Stucwerk plafond", "quantity": 15, "unit_price": 24.00, "total": 220},
         ])

@@ -42,7 +42,12 @@ class InvoiceDetails:
 
 
 @dataclass
-class InvoiceItem:
+class InvoiceCostItem:
+    """
+    Represents a single cost item on an invoice, also referred to as a line item.
+    Each cost item includes a description, quantity, unit price, and the computed total.
+    Cost items are the building blocks of an invoice and are grouped together within an InvoiceLineItems object.
+    """
     description: str
     quantity: int
     unit_price: float
@@ -50,7 +55,12 @@ class InvoiceItem:
 
 
 @dataclass
-class InvoiceItems(DataListBase[InvoiceItem]):
+class InvoiceLineItems(DataListBase[InvoiceCostItem]):
+    """
+    Represents a collection of InvoiceCostItem objects (also known as line items),
+    which together form the detailed breakdown of an invoice.
+    This class establishes the relationship between individual cost items and the complete invoice structure.
+    """
     pass
 
 
@@ -102,3 +112,4 @@ class InvoiceCalculationDetails:
     """
     Dataclass containing information that is needed to execute the calculation of an invoice for one job.
     """
+    pass
