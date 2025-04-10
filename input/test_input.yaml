@@ -1,6 +1,6 @@
 invoice: test-invoice-number
 uitvoerder: Stucadoorsbedrijf Vader & Zn.
-date: auto # genereert de datum van genereren van de factuur
+date: auto # genereert de datum op moment van genereren van de factuur
 klant-info:
   naam: Dennis
   adres: 0223 woning 101B
