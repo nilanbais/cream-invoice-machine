@@ -117,7 +117,7 @@ class TESTInvoicePDF(FPDF):
 
     def header(self):
         # Voeg een logo toe
-        self.image('C:\\Users\\NilanBais\\Documents\\Github\\cream-invoice-machine\\resources\\logo\\logo_white.png', 10, 8, 33)
+        self.image('resources\\logo\\logo_white.png', 10, 8, 33)
         self.set_font('DejaVu', 'B', 12)
         self.cell(0, 10, 'Factuur', 0, 1, 'C')
         self.ln(10)
