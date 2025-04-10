@@ -5,39 +5,6 @@ from typing import List, Generic, TypeVar
 
 TYPE_PLACEHOLDER = TypeVar('T')
 
-@dataclass
-class InvoiceDetails:
-    invoice_number: str
-    date: str
-    customer_name: str
-    customer_address: str
-
-
-@dataclass
-class InvoiceItem:
-    description: str
-    quantity: int
-    unit_price: float
-    total: int
-
-
-@dataclass
-class InvoiceItems:
-    items: List[InvoiceItem]
-
-
-@dataclass
-class CompDetails:
-    name: str
-    address: str
-    postcode: str
-    city: str
-    phone: str
-    email: str
-    kvk_number: str
-    btw_number: str
-    iban: str
-
 
 @dataclass
 class DataListBase(Generic[TYPE_PLACEHOLDER]):
@@ -67,7 +34,46 @@ class DataListBase(Generic[TYPE_PLACEHOLDER]):
 
 
 @dataclass
+class InvoiceDetails:
+    invoice_number: str
+    date: str
+    customer_name: str
+    customer_address: str
+
+
+@dataclass
+class InvoiceItem:
+    description: str
+    quantity: int
+    unit_price: float
+    total: int
+
+
+@dataclass
+class InvoiceItems(DataListBase[InvoiceItem]):
+    pass
+
+
+@dataclass
+class CompDetails:
+    name: str
+    address: str
+    postcode: str
+    city: str
+    phone: str
+    email: str
+    kvk_number: str
+    btw_number: str
+    iban: str
+
+
+
+@dataclass
 class ProductDetails:
+    """
+    Dataclass to hold the details of the reference data relating to the products that could be used to finish
+    a job.
+    """
     name: str
     unit: str
     price: float
@@ -79,11 +85,20 @@ class ProductDetailsList(DataListBase[ProductDetails]):
 
 
 @dataclass
-class JobInfo:
+class LabourTypeInfo:
+    """
+    Dataclass to hold information relating to a standard type of labour that is needed to finish a job.
+    """
     name: str
     price: float
     unit: str
 
 @dataclass
-class JobTypeList(DataListBase[JobInfo]):
+class LabourTypeList(DataListBase[LabourTypeInfo]):
     pass
+
+@dataclass
+class InvoiceCalculationDetails:
+    """
+    Dataclass containing information that is needed to execute the calculation of an invoice for one job.
+    """
