@@ -1,9 +1,18 @@
-naam: Stucadoorsbedrijf Vader & Zn.
-adres: InputAdres
-postcode: 0223 GG
-plaats: InputPlaats
-telefoon: 06 100
-email: 100_voetbal@live.nl
-kvk-nummer: 195034
-btw-nummer: XXtest123SKRT
-iban: RABO 0800 JATOCH
+Stucadoorsbedrijf Vader & Zn.:
+  adres: InputAdres
+  postcode: 0223 GG
+  plaats: InputPlaats
+  telefoon: 06 100
+  email: 100_voetbal@live.nl
+  kvk-nummer: 195034
+  btw-nummer: XXtest123SKRT
+  iban: RABO 0800 JATOCH
+ZZP2 hey hey:
+  adres: InputAdres
+  postcode: 0223 GG
+  plaats: InputPlaats
+  telefoon: 06 100
+  email: paarden@msn.nl
+  kvk-nummer: 456892
+  btw-nummer: XXtest123SKRT 2
+  iban: RABO 0800 NEEMAN

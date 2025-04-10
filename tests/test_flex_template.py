@@ -7,7 +7,7 @@ from datetime import datetime
 
 from cream_invoice_machine.templates.pdf import InvoicePDFTemplate
 
-from cream_invoice_machine.models.dataclasses import InvoiceDetails, InvoiceLineItems, CompDetails
+from cream_invoice_machine.models.dataclasses import InvoiceDetails, InvoiceCostItems, CompanyDetails
 from cream_invoice_machine.utils.helper_functions import invoice_items_from_list
 
 
@@ -21,12 +21,12 @@ class TestFlexTemplate(unittest.TestCase):
             customer_address='0223 woning 101B, 1010 SH Plaats',
             customer_name="de-nice"
         )
-        self.invoice_items: InvoiceLineItems = invoice_items_from_list([
+        self.invoice_items: InvoiceCostItems = invoice_items_from_list([
             {"description": "Stucwerk muren", "quantity": 20, "unit_price": 18.00, "total": 360},
             {"description": "Stucwerk plafond", "quantity": 15, "unit_price": 24.00, "total": 220},
         ])
 
-        self.company_details: CompDetails = CompDetails(
+        self.company_details: CompanyDetails = CompanyDetails(
             name="test test comp",
             address="test address",
             postcode="test postcode",

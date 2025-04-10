@@ -9,7 +9,7 @@ from abc import ABC, abstractmethod
 
 from cream_invoice_machine.utils.file_readers import read_yaml, read_env_variable
 from cream_invoice_machine.utils.helper_functions import flatten_list_of_dicts
-from cream_invoice_machine.models.dataclasses import CompDetails, ProductDetails, ProductDetailsList, LabourTypeInfo, LabourTypeList
+from cream_invoice_machine.models.dataclasses import CompanyDetails, ProductDetails, ProductDetailsList, LabourTypeInfo, LabourTypeList
 
 
 class InfoInputObjectBase(ABC):
@@ -36,7 +36,7 @@ class CompanyInfoInput(InfoInputObjectBase):
 
     _file_path: str = read_env_variable("COMPANY_INFO_PATH")
     _raw_data: dict = None
-    _company_details: CompDetails = None
+    _company_details: CompanyDetails = None
 
     def __init__(self, auto_read: bool = False):
         if auto_read:
@@ -47,7 +47,7 @@ class CompanyInfoInput(InfoInputObjectBase):
         self._raw_data = read_yaml(self._file_path)
 
     def set_object_details(self) -> None:
-        self._company_details = CompDetails(
+        self._company_details = CompanyDetails(
             name=self._raw_data['naam'],
             address=self._raw_data['adres'],
             postcode=self._raw_data['postcode'],
@@ -60,7 +60,7 @@ class CompanyInfoInput(InfoInputObjectBase):
         )
     
     @property
-    def object_details(self) -> CompDetails:
+    def object_details(self) -> CompanyDetails:
         return self._company_details
     
 
@@ -93,7 +93,7 @@ class ProductInfoInput(InfoInputObjectBase):
 
 class LabourTypeInput(InfoInputObjectBase):
 
-    _file_path: str = read_env_variable("JOB_INFO_PATH")
+    _file_path: str = read_env_variable("LABOUR_TYPE_INFO_PATH")
     _raw_data: dict = None
     object_details: LabourTypeList = LabourTypeList()
 

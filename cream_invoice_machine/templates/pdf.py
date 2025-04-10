@@ -10,7 +10,7 @@ from fpdf import FPDF, XPos, YPos
 from typing import List
 
 from cream_invoice_machine.templates.flex_template_test import InvoiceHeaderTemplate
-from cream_invoice_machine.models.dataclasses import InvoiceDetails, InvoiceLineItems, CompDetails
+from cream_invoice_machine.models.dataclasses import InvoiceDetails, InvoiceCostItems, CompanyDetails
 
 
 
@@ -46,7 +46,7 @@ class InvoicePDF(FPDF):
         self.cell(100, 10, f"Adres klant: {invoice_details.customer_address}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
         self.ln(10)
 
-    def add_company_details(self, company_details: CompDetails):
+    def add_company_details(self, company_details: CompanyDetails):
         self.set_font('Helvetica', 'B', 8)
         self.set_xy(140, 20)
         self.multi_cell(0, 8, 
@@ -61,7 +61,7 @@ class InvoicePDF(FPDF):
             align='L'
         )
 
-    def add_invoice_items(self, invoice_items: InvoiceLineItems):
+    def add_invoice_items(self, invoice_items: InvoiceCostItems):
         self.set_xy(10, 100)
         # Header for the items table
         self.set_font('Helvetica', '', 10)
@@ -107,8 +107,8 @@ class InvoicePDFTemplate(FPDF):
     def __init__(
             self,
             invoice_details: InvoiceDetails = None,
-            company_details: CompDetails = None,
-            invoice_items: InvoiceLineItems = None,
+            company_details: CompanyDetails = None,
+            invoice_items: InvoiceCostItems = None,
             orientation = "portrait", 
             unit = "mm", 
             format = "A4", 
@@ -141,8 +141,8 @@ class InvoicePDFTemplate(FPDF):
     def create_invoice(
             self, 
             invoice_details: InvoiceDetails,
-            company_details: CompDetails,
-            invoice_items: InvoiceLineItems 
+            company_details: CompanyDetails,
+            invoice_items: InvoiceCostItems 
             ) -> None:
         self.add_page()
         self.add_invoice_details(invoice_details)
@@ -160,7 +160,7 @@ class InvoicePDFTemplate(FPDF):
         self.cell(100, 10, f"Adres klant: {invoice_details.customer_address}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
         self.ln(10)
 
-    def add_company_details(self, company_details: CompDetails):
+    def add_company_details(self, company_details: CompanyDetails):
         self.set_font('Helvetica', 'B', 8)
         self.set_xy(140, 20)
         self.multi_cell(0, 8, 
@@ -175,7 +175,7 @@ class InvoicePDFTemplate(FPDF):
             align='L'
         )
 
-    def add_invoice_items(self, invoice_items: InvoiceLineItems):
+    def add_invoice_items(self, invoice_items: InvoiceCostItems):
         self.set_xy(10, 100)
         # Header for the items table
         self.set_font('Helvetica', '', 10)
@@ -254,7 +254,7 @@ class TESTInvoicePDF(FPDF):
         self.cell(0, 10, f'Adres: {client_address}', 0, 1)
         self.ln(10)
 
-    def add_invoice_table(self, items: InvoiceLineItems):
+    def add_invoice_table(self, items: InvoiceCostItems):
         self.set_font('DejaVu', 'B', 10)
         self.set_fill_color(200, 220, 255)
         self.cell(40, 10, 'Omschrijving', 1, 0, 'C', 1)
