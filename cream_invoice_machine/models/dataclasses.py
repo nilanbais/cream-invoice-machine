@@ -107,6 +107,7 @@ class LabourTypeInfo:
 class LabourTypeList(DataListBase[LabourTypeInfo]):
     pass
 
+
 @dataclass
 class InvoiceCalculationDetails:
     """

@@ -5,18 +5,14 @@ This class is responsible for handling the input data structure
 and call the correct functionality for generating the pdf pages.
 """
 
-from cream_invoice_machine.utils.invoice_utils.invoice_class import InvoicePDF, TESTInvoicePDF
-from cream_invoice_machine.utils.invoice_utils.invoice_dataclasses import InvoiceDetails, InvoiceLineItems, CompDetails
+from cream_invoice_machine.templates.pdf import InvoicePDF, InvoicePDFTemplate, TESTInvoicePDF
+from cream_invoice_machine.models.dataclasses import InvoiceDetails, InvoiceLineItems, CompDetails
 
 
 
-def invoice_generator(invoice_details: InvoiceDetails, invoice_items: InvoiceLineItems, company_details: CompDetails, output_path: str) -> InvoicePDF:
-    pdf_object = InvoicePDF()
-    pdf_object.add_page()
-    pdf_object.add_invoice_details(invoice_details)
-    pdf_object.add_company_details(company_details)
-    pdf_object.add_invoice_items(invoice_items)
-    pdf_object.output(output_path)
+def render_invoice_pdf(invoice_details: InvoiceDetails, invoice_items: InvoiceLineItems, company_details: CompDetails, output_path: str) -> InvoicePDF:
+    InvoicePDFTemplate(invoice_details, company_details, invoice_items).render(output_path)
+
 
 
 def invoice_generator_test(invoice_details: InvoiceDetails, invoice_items: InvoiceLineItems, output_path: str) -> InvoicePDF:

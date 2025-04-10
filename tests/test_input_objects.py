@@ -4,7 +4,7 @@ Scripts to test functionality of the flex template for the pdf file.
 import unittest
 from datetime import datetime
 
-from cream_invoice_machine.utils.invoice_generator import invoice_generator
+from cream_invoice_machine.services.invoice_generator import render_invoice_pdf
 from cream_invoice_machine.utils.input_objects import CompanyInfoInput, ProductInfoInput, LabourTypeInput
 
 

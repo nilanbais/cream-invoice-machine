@@ -3,10 +3,10 @@ Scripts to test functionality of the pdf generator.
 """
 import os
 import unittest
-from cream_invoice_machine.utils.invoice_generator import invoice_generator, invoice_generator_test
-from cream_invoice_machine.utils.invoice_utils.invoice_dataclasses import InvoiceDetails, InvoiceLineItems, CompDetails
+from cream_invoice_machine.services.invoice_generator import render_invoice_pdf, invoice_generator_test
+from cream_invoice_machine.models.dataclasses import InvoiceDetails, InvoiceLineItems, CompDetails
 from cream_invoice_machine.utils.input_objects import CompanyInfoInput
-from cream_invoice_machine.utils.invoice_utils.utils import invoice_items_from_list
+from cream_invoice_machine.utils.helper_functions import invoice_items_from_list
 
 
 class TestPDFGenerator(unittest.TestCase):
@@ -42,7 +42,7 @@ class TestPDFGenerator(unittest.TestCase):
         print("working dir", os.getcwd())
         self.testcase_setup()
         self.output_file = "output\\test_generating_pdf_expected_input_output.pdf"
-        invoice_generator(
+        render_invoice_pdf(
             invoice_details=self.invoice_details, 
             invoice_items=self.items,
             company_details=self.company_details,
@@ -56,7 +56,7 @@ class TestPDFGenerator(unittest.TestCase):
         
         company_details = CompanyInfoInput(auto_read=True)
         
-        invoice_generator(
+        render_invoice_pdf(
             invoice_details=self.invoice_details, 
             invoice_items=self.items,
             company_details=company_details.object_details,
