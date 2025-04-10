@@ -5,7 +5,7 @@ import unittest
 from datetime import datetime
 
 from cream_invoice_machine.utils.invoice_generator import invoice_generator
-from cream_invoice_machine.utils.input_objects import CompanyInfoInput, ProductInfoInput, JobInfoInput
+from cream_invoice_machine.utils.input_objects import CompanyInfoInput, ProductInfoInput, LabourTypeInput
 
 
 class TestCompanyInfoInputObject(unittest.TestCase):
@@ -87,13 +87,13 @@ class TestJobInfoInputObject(unittest.TestCase):
     def test_job_input_object_auto_read(self) -> None:
         print(f"Running: {self._testMethodName}")
         self.testcase_setup()
-        test_obj = JobInfoInput(auto_read=True)
+        test_obj = LabourTypeInput(auto_read=True)
         self.assertTrue(test_obj._raw_data, None)
 
     def test_job_input_path_change(self) -> None:
         print(f"Running: {self._testMethodName}")
         self.testcase_setup()
-        test_obj = JobInfoInput()
+        test_obj = LabourTypeInput()
         original_path = test_obj._file_path
 
         test_obj.set_input_file_path(new_path=self.new_path)
@@ -105,7 +105,7 @@ class TestJobInfoInputObject(unittest.TestCase):
     def test_job_input_set_data(self) -> None:
         print(f"Running: {self._testMethodName}")
         self.testcase_setup()
-        test_obj = JobInfoInput(auto_read=True)
+        test_obj = LabourTypeInput(auto_read=True)
 
         test_obj.set_object_details()
 

@@ -9,7 +9,7 @@ from abc import ABC, abstractmethod
 
 from cream_invoice_machine.utils.file_reader import read_yaml, read_env_variable
 from cream_invoice_machine.utils.helper_functions import flatten_list_of_dicts
-from cream_invoice_machine.utils.invoice_utils.invoice_dataclasses import CompDetails, ProductDetails, ProductDetailsList, JobInfo, JobTypeList
+from cream_invoice_machine.utils.invoice_utils.invoice_dataclasses import CompDetails, ProductDetails, ProductDetailsList, LabourTypeInfo, LabourTypeList
 
 
 class InfoInputObjectBase(ABC):
@@ -91,11 +91,11 @@ class ProductInfoInput(InfoInputObjectBase):
 
 
 
-class JobInfoInput(InfoInputObjectBase):
+class LabourTypeInput(InfoInputObjectBase):
 
     _file_path: str = read_env_variable("JOB_INFO_PATH")
     _raw_data: dict = None
-    object_details: JobTypeList = JobTypeList()
+    object_details: LabourTypeList = LabourTypeList()
 
     def __init__(self, auto_read: bool = False):
         if auto_read:
@@ -108,7 +108,7 @@ class JobInfoInput(InfoInputObjectBase):
     def set_object_details(self) -> None:
         for job_name, job_info in self._raw_data.items():
             job_info: dict = flatten_list_of_dicts(job_info)
-            item_details = JobInfo(
+            item_details = LabourTypeInfo(
                 name=job_name,
                 unit=job_info['unit'],
                 price=job_info['prijs']
