@@ -1,10 +1,9 @@
 
 
 from dataclasses import dataclass, field
-from typing import List, Generic, TypeVar
+from typing import List, Generic, TypeVar, Any, Optional
 
 TYPE_PLACEHOLDER = TypeVar('T')
-
 
 @dataclass
 class DataListBase(Generic[TYPE_PLACEHOLDER]):
@@ -31,6 +30,18 @@ class DataListBase(Generic[TYPE_PLACEHOLDER]):
 
     def add(self, item: TYPE_PLACEHOLDER) -> None:
         self.entries.append(item)
+    
+    def get_by_attribute(self, attr: str, value: Any) -> Optional[TYPE_PLACEHOLDER]:
+        """
+        Returns the first item in entries where getattr(item, attr) == value.
+        Returns None if no match is found.
+        """
+        for item in self.entries:
+            if getattr(item, attr, None) == value:
+                return item
+        return None
+
+
 
 
 @dataclass
@@ -42,7 +53,7 @@ class InvoiceDetails:
 
 
 @dataclass
-class InvoiceCostItem:
+class InvoiceLineItem:
     """
     Represents a single cost item on an invoice, also referred to as a line item.
     Each cost item includes a description, quantity, unit price, and the computed total.
@@ -55,9 +66,9 @@ class InvoiceCostItem:
 
 
 @dataclass
-class InvoiceLineItems(DataListBase[InvoiceCostItem]):
+class InvoiceCostItems(DataListBase[InvoiceLineItem]):
     """
-    Represents a collection of InvoiceCostItem objects (also known as line items),
+    Represents a collection of InvoiceLineItem objects (also known as cost items),
     which together form the detailed breakdown of an invoice.
     This class establishes the relationship between individual cost items and the complete invoice structure.
     """
@@ -65,7 +76,7 @@ class InvoiceLineItems(DataListBase[InvoiceCostItem]):
 
 
 @dataclass
-class CompDetails:
+class CompanyDetails:
     name: str
     address: str
     postcode: str
@@ -76,6 +87,18 @@ class CompDetails:
     btw_number: str
     iban: str
 
+
+@dataclass
+class CompanyList(DataListBase[CompanyDetails]):
+    pass
+
+
+# TODO: styling object toevoegen aan dataclass
+@dataclass
+class InvoiceTemplateInput:
+    invoice_details: InvoiceDetails
+    company_details: CompanyDetails
+    invoice_items: InvoiceCostItems
 
 
 @dataclass
@@ -107,9 +130,28 @@ class LabourTypeInfo:
 class LabourTypeList(DataListBase[LabourTypeInfo]):
     pass
 
+
 @dataclass
-class InvoiceCalculationDetails:
-    """
-    Dataclass containing information that is needed to execute the calculation of an invoice for one job.
-    """
-    pass
+class ClientDetails:
+    name: str
+    address: str
+    post_code: str
+    city: str
+
+
+@dataclass
+class JobCalculationDetails:
+    btw_percentage: int  # x%
+    round_up: int  # 10: 123 => 130 , 100: 167 => 200 
+    extra_fixed: float
+
+
+@dataclass
+class JobDetailsInput:
+    job_name: str
+    date: str
+    company_name: str
+    client_info: ClientDetails
+    work_details: dict
+    calculation_info: JobCalculationDetails 
+    

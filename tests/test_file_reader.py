@@ -2,7 +2,7 @@
 Scripts to test functionality of the file reader.
 """
 import unittest
-from cream_invoice_machine.utils.file_reader import read_yaml, read_env_variable
+from cream_invoice_machine.utils.file_readers import read_yaml, read_env_variable
 
 class TestFileReader(unittest.TestCase):
     
