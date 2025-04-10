@@ -1,0 +1,8 @@
+[project]
+name = "cream-invoice-machine"
+version = "0.1.0"
+dependencies = [
+    "fpdf2",
+    "pyyaml",
+    "python-dotenv"
+]

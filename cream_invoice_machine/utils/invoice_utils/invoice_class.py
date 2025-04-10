@@ -74,7 +74,7 @@ class InvoicePDF(FPDF):
         self.set_font('Helvetica', '', 10)
 
         total_amount = 0
-        for item in invoice_items.items:
+        for item in invoice_items.entries:
             description = item.description
             quantity = item.quantity
             price = item.unit_price
