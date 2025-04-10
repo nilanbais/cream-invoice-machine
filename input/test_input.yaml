@@ -22,3 +22,8 @@ werk:
       - bijkeuken: 11
   - microcement: 8
   - hoeknaden: 13
+werk-extra:
+  - btw: 9
+  - onvoorzien:
+      - afronding: 10
+      - bijtelling: 0
