@@ -1,6 +1,7 @@
 """
 Scripts to test functionality of the pdf generator.
 """
+import os
 import unittest
 from cream_invoice_machine.utils.invoice_generator import invoice_generator, invoice_generator_test
 from cream_invoice_machine.utils.invoice_utils.invoice_dataclasses import InvoiceDetails, InvoiceItems, CompDetails
@@ -13,10 +14,10 @@ class TestPDFGenerator(unittest.TestCase):
     def testcase_setup(self) -> None:
         self.input_file = ""
 
-        self.invoice_details = InvoiceDetails(
+        self.invoice_details: InvoiceDetails = InvoiceDetails(
             invoice_number="test invoice number 100",
             date='21-12-2024',
-            customer_address='0223 woning 101B, 1010 SH Fuck Texel',
+            customer_address='0223 woning 101B, 1010 SH Plaats',
             customer_name="de-nice"
         )
         self.items: InvoiceItems = invoice_items_from_list([
@@ -38,6 +39,7 @@ class TestPDFGenerator(unittest.TestCase):
 
     def test_generating_pdf_expected_input(self) -> None:
         print(f"Running: {self._testMethodName}")
+        print("working dir", os.getcwd())
         self.testcase_setup()
         self.output_file = "output\\test_generating_pdf_expected_input_output.pdf"
         invoice_generator(
