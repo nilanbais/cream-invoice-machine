@@ -20,11 +20,7 @@ from cream_invoice_machine.models.dataclasses import (
 
 
 def read_company_input(file_path: str = None) -> CompanyList:
-    if file_path:
-        raw_data: dict = read_yaml(file_path)
-    else:
-        raw_data: dict = read_yaml(read_env_variable("COMPANY_INFO_PATH"))
-
+    raw_data: dict = read_yaml(file_path)
     company_list: CompanyList = CompanyList()
 
     for company_name, company_details in raw_data.items():
@@ -44,12 +40,9 @@ def read_company_input(file_path: str = None) -> CompanyList:
     return company_list
 
 
-def read_product_input(file_path: str = None) -> ProductDetailsList:
-    if file_path:
-        raw_data: dict = read_yaml(file_path)
-    else:
-        raw_data: dict = read_yaml(read_env_variable("PRODUCT_INFO_PATH"))
 
+def read_product_input(file_path: str = None) -> ProductDetailsList:
+    raw_data: dict = read_yaml(file_path)
     products_list: ProductDetailsList = ProductDetailsList()
 
     for product_name, product_info in raw_data.items():
@@ -67,10 +60,7 @@ def read_product_input(file_path: str = None) -> ProductDetailsList:
 
 
 def read_labour_type_input(file_path: str = None) -> LabourTypeList:
-    if file_path:
-        raw_data: dict = read_yaml(file_path)
-    else:
-        raw_data: dict = read_yaml(read_env_variable("LABOUR_TYPE_INFO_PATH"))
+    raw_data: dict = read_yaml(file_path)
 
     labour_type_list: LabourTypeList = LabourTypeList()
     for labour_type, labour_type_details in raw_data.items():
@@ -81,6 +71,7 @@ def read_labour_type_input(file_path: str = None) -> LabourTypeList:
         )
         labour_type_list.add(item_details)
     return labour_type_list
+
 
 
 def read_job_input(file_path: str) -> JobDetailsInput:

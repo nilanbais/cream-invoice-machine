@@ -1,7 +1,9 @@
-from typing import List
-
+import os
 from datetime import datetime
 
+from typing import List
+
+from cream_invoice_machine.utils.file_readers import read_env_variable
 from cream_invoice_machine.models.dataclasses import (
     InvoiceLineItem, 
     InvoiceCostItems,
@@ -9,6 +11,20 @@ from cream_invoice_machine.models.dataclasses import (
     ClientDetails,
     JobCalculationDetails
     )
+
+
+def list_files(path: str) -> list:
+    folder_content: list = os.listdir(path)
+    # change folder_content to contain full path
+    folder_content: list = [os.path.join(path, item) for item in folder_content]
+    # filter directories from folder content
+    folder_content: list = [item for item in folder_content if not os.path.isdir(item)]
+    
+    return folder_content
+
+def basename_from_path(path: str) -> str:
+    normpath = os.path.normpath(path)
+    return os.path.basename(normpath)
 
 
 def flatten_list_of_dicts(input_list: List[dict]) -> dict:

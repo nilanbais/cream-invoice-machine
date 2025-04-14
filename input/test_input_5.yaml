@@ -1,0 +1,30 @@
+invoice: test-invoice-number5
+uitvoerder: Stucadoorsbedrijf Vader & Zn.
+date: auto # genereert de datum op moment van genereren van de factuur
+klant-info:
+  naam: test5
+  adres: 0223 woning 101B
+  postcode: 2020 BZ
+  plaats: Fuck Texel
+werk:
+  wanden:
+    woonkamer: 43
+    keuken: 11
+    hal: 18
+    wc: 9
+    overloop-trapopgang: 21
+    slaapkamer-voor-1: 19
+    slaapkamer-voor-2: 25
+    slaapkamer-achter-1: 19
+    slaapkamer-achter-2: 25
+  plafond:
+    woonkamer: 40
+    hal: 6
+    bijkeuken: 11
+  microcement: 8
+  hoeknaden: 13
+extra:
+  btw: 9
+  onvoorzien:
+    afronding: 10
+    bijtelling: 0

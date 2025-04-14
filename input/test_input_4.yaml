@@ -1,8 +1,8 @@
-invoice: test-invoice-number
+invoice: test-invoice-number4
 uitvoerder: Stucadoorsbedrijf Vader & Zn.
 date: auto # genereert de datum op moment van genereren van de factuur
 klant-info:
-  naam: Dennis
+  naam: test4
   adres: 0223 woning 101B
   postcode: 2020 BZ
   plaats: Fuck Texel

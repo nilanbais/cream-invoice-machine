@@ -34,7 +34,7 @@ class InfoInputObjectBase(ABC):
 
 class CompanyInfoInput(InfoInputObjectBase):
 
-    _file_path: str = read_env_variable("COMPANY_INFO_PATH")
+    _file_path: str = read_env_variable("DEFAULT_COMPANY_INFO_PATH")
     _raw_data: dict = None
     _company_details: CompanyDetails = None
 
@@ -66,7 +66,7 @@ class CompanyInfoInput(InfoInputObjectBase):
 
 class ProductInfoInput(InfoInputObjectBase):
 
-    _file_path: str = read_env_variable("PRODUCT_INFO_PATH")
+    _file_path: str = read_env_variable("DEFAULT_PRODUCT_INFO_PATH")
     _raw_data: dict = None
     object_details: ProductDetailsList = ProductDetailsList()
 
@@ -93,7 +93,7 @@ class ProductInfoInput(InfoInputObjectBase):
 
 class LabourTypeInput(InfoInputObjectBase):
 
-    _file_path: str = read_env_variable("LABOUR_TYPE_INFO_PATH")
+    _file_path: str = read_env_variable("DEFAULT_LABOUR_TYPE_INFO_PATH")
     _raw_data: dict = None
     object_details: LabourTypeList = LabourTypeList()
 

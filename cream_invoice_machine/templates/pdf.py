@@ -10,7 +10,12 @@ from fpdf import FPDF, XPos, YPos
 from typing import List
 
 from cream_invoice_machine.templates.flex_template_test import InvoiceHeaderTemplate
-from cream_invoice_machine.models.dataclasses import InvoiceDetails, InvoiceCostItems, CompanyDetails
+from cream_invoice_machine.models.dataclasses import (
+    InvoiceDetails,
+    InvoiceCostItems, 
+    CompanyDetails, 
+    InvoiceTemplateInput
+    )
 
 
 
@@ -106,6 +111,7 @@ class InvoicePDF(FPDF):
 class InvoicePDFTemplate(FPDF):
     def __init__(
             self,
+            input_package: InvoiceTemplateInput = None,
             invoice_details: InvoiceDetails = None,
             company_details: CompanyDetails = None,
             invoice_items: InvoiceCostItems = None,
@@ -116,8 +122,17 @@ class InvoicePDFTemplate(FPDF):
             ) -> None:
         super().__init__(orientation, unit, format, font_cache_dir)
         
-        if all([invoice_details, company_details, invoice_items]):
-            self.create_invoice(invoice_details, company_details, invoice_items)
+        if input_package:
+            self.create_invoice(
+                input_package.invoice_details, 
+                input_package.company_details, 
+                input_package.invoice_items
+                )
+        elif all([invoice_details, company_details, invoice_items]):
+            self.create_invoice(
+                invoice_details, 
+                company_details, 
+                invoice_items)
         
 
     def header(self):
