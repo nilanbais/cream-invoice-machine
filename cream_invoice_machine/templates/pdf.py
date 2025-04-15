@@ -353,23 +353,24 @@ class InvoicePDFWithStyleInput(FPDF):
 
 
     def add_invoice_items(self):
-        self.set_xy(10, 100)
+        self.set_xy(0, 100)
         # Header for the items table
         self.set_font(
             self.styling_settings.general.font, 
-            "B", 
+            self.styling_settings.invoice_items.font_style, 
             self.styling_settings.invoice_items.font_size
             )
 
         with self.table(
-            col_widths=(3,1,1,1),
-            text_align="CENTER",
+            width=180,
+            col_widths=(4,1,1,1),
+            text_align=("LEFT"),
             borders_layout="SINGLE_TOP_LINE"
         ) as table:
             header_row = table.row()
             header_row.cell('Omschrijving')
             header_row.cell('Aantal')
-            header_row.cell('Prijs')
+            header_row.cell('Prijs (EUR)')
             header_row.cell('Totaal')
 
             total_invoice_cost_excl_btw: float = 0.0
@@ -382,7 +383,7 @@ class InvoicePDFWithStyleInput(FPDF):
                 line_total = quantity * price
                 total_invoice_cost_excl_btw += line_total
 
-                row_data: tuple = (description, str(quantity), f"{price:.2f} EUR", f"{line_total:.2f}")
+                row_data: tuple = (description, str(quantity), f"{price:.2f}", f"{line_total:.2f}")
                 for value in row_data:
                     row.cell(value)
 
@@ -393,22 +394,22 @@ class InvoicePDFWithStyleInput(FPDF):
             total_excl_btw_row_data: tuple = ('Totaal excl BTW:', None, None, str(total_invoice_cost_excl_btw))
             total_excl_btw_row = table.row()
             for value in total_excl_btw_row_data:
-                    total_excl_btw_row.cell(value)
+                    total_excl_btw_row.cell(value, border='TOP')
 
 
             btw_row_data: tuple = (
                 f'{self.input_package.invoice_details.calculation_info.btw_percentage}% BTW:', 
                 None, 
                 None, 
-                str(btw_amount)
+                f"{btw_amount:.2f}"
                 )
             btw_row = table.row()
             for value in btw_row_data:
-                    btw_row.cell(value)
+                    btw_row.cell(value, border='TOP')
 
 
-            total_incl_btw_row_data: tuple = ('Totaal incl. BTW:', None, None, str(total_invoice_cost_incl_btw))
+            total_incl_btw_row_data: tuple = ('Totaal incl. BTW:', None, None, f"{total_invoice_cost_incl_btw:.2f}")
             total_incl_btw_row = table.row()
             for value in total_incl_btw_row_data:
-                    total_incl_btw_row.cell(value)
+                    total_incl_btw_row.cell(value, border='TOP')
 
