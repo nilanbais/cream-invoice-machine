@@ -363,15 +363,16 @@ class InvoicePDFWithStyleInput(FPDF):
 
         with self.table(
             width=180,
-            col_widths=(4,1,1,1),
+            col_widths=(4,1,1,1,1),
             text_align=("LEFT"),
             borders_layout="SINGLE_TOP_LINE"
         ) as table:
             header_row = table.row()
             header_row.cell('Omschrijving')
             header_row.cell('Aantal')
-            header_row.cell('Prijs (EUR)')
-            header_row.cell('Totaal')
+            header_row.cell('Unit (eenheid)')
+            header_row.cell('Prijs (EUR) per unit')
+            header_row.cell('Totaal (EUR)')
 
             total_invoice_cost_excl_btw: float = 0.0
             for line_item in self.input_package.invoice_items.entries:
@@ -379,11 +380,12 @@ class InvoicePDFWithStyleInput(FPDF):
 
                 description = line_item.description
                 quantity = line_item.quantity
+                unit_size = line_item.unit_size
                 price = line_item.unit_price
                 line_total = quantity * price
                 total_invoice_cost_excl_btw += line_total
 
-                row_data: tuple = (description, str(quantity), f"{price:.2f}", f"{line_total:.2f}")
+                row_data: tuple = (description, str(quantity), unit_size, f"{price:.2f}", f"{line_total:.2f}")
                 for value in row_data:
                     row.cell(value)
 
@@ -391,7 +393,7 @@ class InvoicePDFWithStyleInput(FPDF):
             btw_amount = total_invoice_cost_excl_btw * (self.input_package.invoice_details.calculation_info.btw_percentage / 100)  # btw_percentage: int = 9 means 9%
             total_invoice_cost_incl_btw = total_invoice_cost_excl_btw + btw_amount
 
-            total_excl_btw_row_data: tuple = ('Totaal excl BTW:', None, None, str(total_invoice_cost_excl_btw))
+            total_excl_btw_row_data: tuple = ('Totaal excl BTW:', None, None, None, str(total_invoice_cost_excl_btw))
             total_excl_btw_row = table.row()
             for value in total_excl_btw_row_data:
                     total_excl_btw_row.cell(value, border='TOP')
@@ -400,6 +402,7 @@ class InvoicePDFWithStyleInput(FPDF):
             btw_row_data: tuple = (
                 f'{self.input_package.invoice_details.calculation_info.btw_percentage}% BTW:', 
                 None, 
+                None,
                 None, 
                 f"{btw_amount:.2f}"
                 )
@@ -408,7 +411,7 @@ class InvoicePDFWithStyleInput(FPDF):
                     btw_row.cell(value, border='TOP')
 
 
-            total_incl_btw_row_data: tuple = ('Totaal incl. BTW:', None, None, f"{total_invoice_cost_incl_btw:.2f}")
+            total_incl_btw_row_data: tuple = ('Totaal incl. BTW:', None, None, None, f"{total_invoice_cost_incl_btw:.2f}")
             total_incl_btw_row = table.row()
             for value in total_incl_btw_row_data:
                     total_incl_btw_row.cell(value, border='TOP')

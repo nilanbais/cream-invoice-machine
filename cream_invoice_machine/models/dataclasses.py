@@ -68,6 +68,7 @@ class InvoiceLineItem:
     """
     description: str
     quantity: int
+    unit_size: str
     unit_price: float
     total: int
 

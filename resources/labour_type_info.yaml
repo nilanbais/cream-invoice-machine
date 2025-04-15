@@ -6,7 +6,7 @@ plafond:
   unit: "m2"
 hoeknaden:
   prijs: 15.00
-  unit: "ps"
+  unit: "per stuk"
 microcement:
   prijs: 125.00
   unit: "m2"

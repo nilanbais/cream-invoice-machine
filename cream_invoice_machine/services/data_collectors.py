@@ -86,18 +86,20 @@ def collect_invoice_line_items(
         labour_type_info_ref = labour_type_input.get_by_attribute(attr="name", value=work_type)
         if isinstance(work_item, dict):
             for nested_key, nested_value in work_item.items():
-                description = str().join([work_type, ' - ', nested_key])
+                description = str().join([str(work_type).capitalize(), ' - ', str(nested_key).capitalize()])
                 line_item = InvoiceLineItem(
                     description=description,
                     quantity=nested_value,
+                    unit_size=labour_type_info_ref.unit,
                     unit_price=labour_type_info_ref.price,
                     total=(nested_value*labour_type_info_ref.price)
                 )
                 invoice_cost_item_list.add(line_item)
         else:
             line_item = InvoiceLineItem(
-                description=work_type,
+                description=str(work_type).capitalize(),
                 quantity=work_item,
+                unit_size=labour_type_info_ref.unit,
                 unit_price=labour_type_info_ref.price,
                 total=(work_item*labour_type_info_ref.price)
             )
