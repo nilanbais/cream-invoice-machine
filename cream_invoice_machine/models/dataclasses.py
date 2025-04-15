@@ -5,6 +5,7 @@ from typing import List, Generic, TypeVar, Any, Optional
 
 TYPE_PLACEHOLDER = TypeVar('T')
 
+
 @dataclass
 class DataListBase(Generic[TYPE_PLACEHOLDER]):
     """
@@ -42,7 +43,12 @@ class DataListBase(Generic[TYPE_PLACEHOLDER]):
         return None
 
 
-
+@dataclass
+class JobCalculationDetails:
+    btw_percentage: int  # x%
+    round_up: int  # 10: 123 => 130 , 100: 167 => 200 
+    extra_fixed: float
+    
 
 @dataclass
 class InvoiceDetails:
@@ -50,6 +56,7 @@ class InvoiceDetails:
     date: str
     customer_name: str
     customer_address: str
+    calculation_info: JobCalculationDetails
 
 
 @dataclass
@@ -61,6 +68,7 @@ class InvoiceLineItem:
     """
     description: str
     quantity: int
+    unit_size: str
     unit_price: float
     total: int
 
@@ -140,13 +148,6 @@ class ClientDetails:
 
 
 @dataclass
-class JobCalculationDetails:
-    btw_percentage: int  # x%
-    round_up: int  # 10: 123 => 130 , 100: 167 => 200 
-    extra_fixed: float
-
-
-@dataclass
 class JobDetailsInput:
     job_name: str
     date: str
@@ -161,5 +162,28 @@ class InvoiceGeneratorConfigurations:
     file_format: str
     user_input_folder: str
     output_folder: str
+    document_styling_input: str
     company_information_input: str
     labour_type_information_input: str
+
+
+
+@dataclass
+class StyleSettings:
+    font: Optional[str] = None
+    font_size: Optional[int] = None
+    font_style: Optional[str] = None
+    cell_width: Optional[str] = None
+    cell_height: Optional[str] = None
+    border: Optional[int] = None
+
+
+@dataclass
+class StyleSettingsInputPackage:
+    general: Optional[StyleSettings] 
+    header: Optional[StyleSettings]
+    footer: Optional[StyleSettings]
+    company_details: Optional[StyleSettings]
+    invoice_details: Optional[StyleSettings]
+    invoice_items: Optional[StyleSettings] 
+    table: Optional[StyleSettings]

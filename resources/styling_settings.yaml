@@ -1,0 +1,23 @@
+general:
+  font: "Helvetica"
+header:
+  font-size: 12
+  font-style: ""
+footer:
+  font-size: 8
+  font-style: ""
+invoice_details:
+  font-size: 10
+  font-style: ""
+  cell-width: 100
+  cell-height: 6
+company_details:
+  font-size: 8
+  font-style: "B"
+  cell-width: 0
+  cell-height: 6
+invoice_items:
+  font-size: 10
+  font-style: ""
+table:
+  border: 1

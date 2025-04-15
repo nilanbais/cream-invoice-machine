@@ -4,6 +4,7 @@ Scripts responsible for reading and ordening input data
 
 from datetime import datetime
 
+from cream_invoice_machine.utils.helper_functions import style_settings_from_dict
 from cream_invoice_machine.utils.file_readers import read_yaml, read_env_variable
 from cream_invoice_machine.models.dataclasses import (
     CompanyDetails,
@@ -14,7 +15,8 @@ from cream_invoice_machine.models.dataclasses import (
     LabourTypeList, 
     JobDetailsInput,
     ClientDetails,
-    JobCalculationDetails
+    JobCalculationDetails,
+    StyleSettingsInputPackage
     )
 
 
@@ -101,3 +103,38 @@ def read_job_input(file_path: str) -> JobDetailsInput:
 
     return job_details_input
 
+
+def read_styling_settings(file_path: str) -> StyleSettingsInputPackage:
+    raw_data: dict = read_yaml(file_path)
+
+    dataclass_input: dict = {}
+    
+    for field, setting_dict in raw_data.items():
+        dataclass_input[field] = style_settings_from_dict(setting_dict)
+
+    reference_list: list = [
+        "general",
+        "header",
+        "footer",
+        "invoice_details",
+        "company_details",
+        "invoice_items",
+        "table"
+        ]
+    
+    missing_items: list = [item for item in reference_list if item not in raw_data.keys()]
+
+    for item in missing_items:
+        dataclass_input[item] = style_settings_from_dict(None)
+   
+    style_setting_pack: StyleSettingsInputPackage = StyleSettingsInputPackage(
+        general=dataclass_input['general'],
+        header=dataclass_input['header'],
+        footer=dataclass_input['footer'],
+        invoice_details=dataclass_input['invoice_details'],
+        company_details=dataclass_input['company_details'],
+        invoice_items=dataclass_input['invoice_items'],
+        table=dataclass_input['table']
+    )
+
+    return style_setting_pack

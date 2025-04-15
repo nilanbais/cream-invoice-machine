@@ -4,8 +4,7 @@ Scripts to test functionality of the pdf generator.
 import os
 import unittest
 from cream_invoice_machine.services.invoice_generator import (
-    render_invoice_pdf, 
-    invoice_generator_test,
+    render_invoice_pdf,
     generate_invoice_pdf_on_path,
     InvoiceGenerator
     )

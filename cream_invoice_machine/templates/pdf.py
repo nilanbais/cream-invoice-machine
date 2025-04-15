@@ -4,17 +4,19 @@ Sctipt containing the invoice class.
 This class is responsible for and implements the structure of 
 the generated pdf pages.
 """
-import os
+from datetime import datetime, timedelta
+
 from fpdf import FPDF, XPos, YPos
 
-from typing import List
+from typing import Optional
 
 from cream_invoice_machine.templates.flex_template_test import InvoiceHeaderTemplate
 from cream_invoice_machine.models.dataclasses import (
     InvoiceDetails,
     InvoiceCostItems, 
     CompanyDetails, 
-    InvoiceTemplateInput
+    InvoiceTemplateInput,
+    StyleSettingsInputPackage
     )
 
 
@@ -232,62 +234,185 @@ class InvoicePDFTemplate(FPDF):
 
 
 
-class TESTInvoicePDF(FPDF):
-    def __init__(self, orientation='P', unit='mm', format='A4'):
-        super().__init__(orientation, unit, format)
-        self.add_fonts()
-        self.set_auto_page_break(auto=True, margin=15)
-        self.add_page()
-        self.set_margins(10, 10, 10)
 
-    def add_fonts(self):
-        # Voeg aangepaste lettertypen toe als dat nodig is
-        self.add_font('DejaVu', '', os.path.abspath(os.path.join('resources', 'fonts', 'DejaVuSansCondensed.ttf')), uni=True)
-        self.add_font('DejaVu', 'B', os.path.abspath(os.path.join('resources', 'fonts', 'DejaVuSans-Bold.ttf')), uni=True)
-        self.add_font('DejaVu', 'I', os.path.abspath(os.path.join('resources', 'fonts', 'DejaVuSans-Oblique.ttf')), uni=True)
+class InvoicePDFWithStyleInput(FPDF):
+    def __init__(
+            self,
+            input_package: InvoiceTemplateInput = None,
+            styling_settings: StyleSettingsInputPackage = None, 
+            orientation = "portrait", 
+            unit = "mm", 
+            format = "A4", 
+            font_cache_dir = "DEPRECATED"
+            ) -> None:
+        super().__init__(orientation, unit, format, font_cache_dir)
+        self.input_package: Optional[InvoiceTemplateInput] = input_package
+        self.styling_settings: Optional[StyleSettingsInputPackage] = styling_settings
+        self.create_invoice()
+
+
+    def create_invoice(self) -> None:
+        self.add_page()
+        self.add_invoice_details()
+        self.add_company_details()
+        self.add_invoice_items()
+
+
+    def render(self, path: str) -> None:
+        self.output(path)
+
 
     def header(self):
-        # Voeg een logo toe
-        self.image('resources\\logo\\logo_white.png', 10, 8, 33)
-        self.set_font('DejaVu', 'B', 12)
-        self.cell(0, 10, 'Factuur', 0, 1, 'C')
-        self.ln(10)
+        # Bedrijfsnaam
+        self.set_font(self.styling_settings.general.font, self.styling_settings.header.font_style, self.styling_settings.header.font_size)
+        self.image('resources\\logo\\logo_white.png', 10, 8, 33)  # Adjust the path and size as needed
+        self.cell(0, 10, "Factuur",  new_x=XPos.LMARGIN, new_y=YPos.NEXT, align="C")
+        self.ln(10)  # Lijnbreuk
+
 
     def footer(self):
-        self.set_y(-35)
+        # bereken deadline
+        deadline_datum: datetime = datetime.today() + timedelta(days=30)
+        datum_string: str = deadline_datum.strftime("%d-%m-%Y")
+
+        bedrijf_naam: str = self.input_package.company_details.name
+        iban: str = self.input_package.company_details.iban
+        # Pagina-nummer
+        self.set_y(-30)
+        self.set_font(self.styling_settings.general.font, self.styling_settings.footer.font_style, self.styling_settings.footer.font_size)
         self.multi_cell(0, 10, 
-            "Te betalen binnen 30 dagen (voor DD-MM-YYYY) op rekeningnummer NL12BANK0123456789\n"
-            "t.n.v. STUKADOORSBEDRIJF onder vermelding van klantnummer en factuurnummer.", 
+            f"Te betalen binnen 30 dagen (voor {datum_string}) op rekeningnummer {iban}\n"
+            f"t.n.v. {bedrijf_naam} onder vermelding van klantnummer en factuurnummer.", 
             align='C'
         )
-        self.set_font('DejaVu', 'I', 8)
-        self.cell(0, 10, f'Pagina {self.page_no()}', 0, 0, 'C')
+        self.cell(0, 10, f"Pagina {self.page_no()}", align="C")
 
-    def add_client_info(self, client_name, client_address):
-        self.set_font('DejaVu', '', 10)
-        self.cell(0, 10, f'Klantnaam: {client_name}', 0, 1)
-        self.cell(0, 10, f'Adres: {client_address}', 0, 1)
+
+    def add_invoice_details(self):
+        self.set_font(
+            self.styling_settings.general.font, 
+            self.styling_settings.invoice_details.font_style, 
+            self.styling_settings.invoice_details.font_size
+            )
+        
+        self.cell(
+            self.styling_settings.invoice_details.cell_width, 
+            self.styling_settings.invoice_details.cell_height, 
+            f"Factuurnummer: {self.input_package.invoice_details.invoice_number}", 
+            new_x=XPos.LMARGIN, 
+            new_y=YPos.NEXT
+            )
+        self.cell(
+            self.styling_settings.invoice_details.cell_width, 
+            self.styling_settings.invoice_details.cell_height, 
+            f"Datum: {self.input_package.invoice_details.date}", 
+            new_x=XPos.LMARGIN, 
+            new_y=YPos.NEXT
+            )
+        self.cell(
+            self.styling_settings.invoice_details.cell_width, 
+            self.styling_settings.invoice_details.cell_height, 
+            f"Naam klant: {self.input_package.invoice_details.customer_name}", 
+            new_x=XPos.LMARGIN, 
+            new_y=YPos.NEXT
+            )
+        self.cell(
+            self.styling_settings.invoice_details.cell_width, 
+            self.styling_settings.invoice_details.cell_height, 
+            f"Adres klant: {self.input_package.invoice_details.customer_address}", 
+            new_x=XPos.LMARGIN, 
+            new_y=YPos.NEXT
+            )
+        
         self.ln(10)
 
-    def add_invoice_table(self, items: InvoiceCostItems):
-        self.set_font('DejaVu', 'B', 10)
-        self.set_fill_color(200, 220, 255)
-        self.cell(40, 10, 'Omschrijving', 1, 0, 'C', 1)
-        self.cell(30, 10, 'Aantal', 1, 0, 'C', 1)
-        self.cell(30, 10, 'Prijs per stuk', 1, 0, 'C', 1)
-        self.cell(30, 10, 'Totaal', 1, 1, 'C', 1)
-        self.set_font('DejaVu', '', 10)
-        self.set_fill_color(245, 245, 245)
-        fill = False
-        for item in items.items:
-            self.cell(40, 10, item.description, 1, 0, 'L', fill)
-            self.cell(30, 10, str(item.quantity), 1, 0, 'C', fill)
-            self.cell(30, 10, str(item.unit_price), 1, 0, 'R', fill)
-            self.cell(30, 10, str(item.total), 1, 1, 'R', fill)
-            fill = not fill
 
-    def add_total_amount(self, total):
-        self.set_font('DejaVu', 'B', 10)
-        self.cell(100, 10, '', 0, 0)
-        self.cell(30, 10, 'Totaalbedrag:', 0, 0, 'R')
-        self.cell(30, 10, f"€ {total:.2f}", 1, 1, 'R')
+    def add_company_details(self):
+        self.set_font(
+            self.styling_settings.general.font, 
+            self.styling_settings.company_details.font_style, 
+            self.styling_settings.company_details.font_size
+            )
+        
+        # self.set_xy(140, 20)
+        self.set_xy(145, 27.5)
+
+        self.multi_cell(
+            self.styling_settings.company_details.cell_width,
+            self.styling_settings.company_details.cell_height,
+            f"{self.input_package.company_details.name}\n"
+            f"{self.input_package.company_details.address}\n"
+            f"{self.input_package.company_details.postcode}, {self.input_package.company_details.city}\n"
+            f"{self.input_package.company_details.phone}\n"
+            f"{self.input_package.company_details.email}\n"
+            f"{self.input_package.company_details.kvk_number}\n"
+            f"{self.input_package.company_details.btw_number}\n"
+            f"{self.input_package.company_details.iban}",
+            align='L'
+        )
+
+
+    def add_invoice_items(self):
+        self.set_xy(0, 100)
+        # Header for the items table
+        self.set_font(
+            self.styling_settings.general.font, 
+            self.styling_settings.invoice_items.font_style, 
+            self.styling_settings.invoice_items.font_size
+            )
+
+        with self.table(
+            width=180,
+            col_widths=(4,1,1,1,1),
+            text_align=("LEFT"),
+            borders_layout="SINGLE_TOP_LINE"
+        ) as table:
+            header_row = table.row()
+            header_row.cell('Omschrijving')
+            header_row.cell('Aantal')
+            header_row.cell('Unit (eenheid)')
+            header_row.cell('Prijs (EUR) per unit')
+            header_row.cell('Totaal (EUR)')
+
+            total_invoice_cost_excl_btw: float = 0.0
+            for line_item in self.input_package.invoice_items.entries:
+                row = table.row()
+
+                description = line_item.description
+                quantity = line_item.quantity
+                unit_size = line_item.unit_size
+                price = line_item.unit_price
+                line_total = quantity * price
+                total_invoice_cost_excl_btw += line_total
+
+                row_data: tuple = (description, str(quantity), unit_size, f"{price:.2f}", f"{line_total:.2f}")
+                for value in row_data:
+                    row.cell(value)
+
+
+            btw_amount = total_invoice_cost_excl_btw * (self.input_package.invoice_details.calculation_info.btw_percentage / 100)  # btw_percentage: int = 9 means 9%
+            total_invoice_cost_incl_btw = total_invoice_cost_excl_btw + btw_amount
+
+            total_excl_btw_row_data: tuple = ('Totaal excl BTW:', None, None, None, str(total_invoice_cost_excl_btw))
+            total_excl_btw_row = table.row()
+            for value in total_excl_btw_row_data:
+                    total_excl_btw_row.cell(value, border='TOP')
+
+
+            btw_row_data: tuple = (
+                f'{self.input_package.invoice_details.calculation_info.btw_percentage}% BTW:', 
+                None, 
+                None,
+                None, 
+                f"{btw_amount:.2f}"
+                )
+            btw_row = table.row()
+            for value in btw_row_data:
+                    btw_row.cell(value, border='TOP')
+
+
+            total_incl_btw_row_data: tuple = ('Totaal incl. BTW:', None, None, None, f"{total_invoice_cost_incl_btw:.2f}")
+            total_incl_btw_row = table.row()
+            for value in total_incl_btw_row_data:
+                    total_incl_btw_row.cell(value, border='TOP')
+
