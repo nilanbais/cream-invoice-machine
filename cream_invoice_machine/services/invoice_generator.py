@@ -128,8 +128,8 @@ class InvoiceGenerator:
             # drop file format like '.yaml' from basename
             basename = basename.split('.')[0]
 
-        timestamp = datetime.timestamp(datetime.now())
-        render_filename: str = str().join([f"render_{timestamp}_", basename])
+        today_str = datetime.today().strftime("%d_%m_%Y")
+        render_filename: str = str().join([f"render_{today_str}_", basename])
         return render_filename
 
     def generate_invoices_from_set_configuration(self, verbose: bool = False) -> None:
