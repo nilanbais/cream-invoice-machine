@@ -13,9 +13,9 @@ from cream_invoice_machine.utils.helper_functions import (
     list_files,
     basename_from_path
     )
-from cream_invoice_machine.templates.pdf import (
-    InvoicePDF, 
-    InvoicePDFTemplate
+from cream_invoice_machine.templates.pdf import ( 
+    InvoicePDFTemplate,
+    InvoicePDFWithStyleInput
     )
 from cream_invoice_machine.models.dataclasses import (
     InvoiceDetails, 
@@ -26,13 +26,15 @@ from cream_invoice_machine.models.dataclasses import (
     LabourTypeList,
     CompanyList,
     InvoiceGeneratorConfigurations,
-    DataListBase
+    DataListBase,
+    StyleSettingsInputPackage
     )
 from cream_invoice_machine.services.input_readers import (
     read_job_input, 
     read_product_input, 
     read_company_input,
-    read_labour_type_input
+    read_labour_type_input,
+    read_styling_settings
     )
 
 
@@ -76,7 +78,7 @@ class InvoiceGenerator:
             file_format: str = 'pdf',
             user_input_folder: str = 'default',
             output_folder: str = 'default',
-            styling_input_path: str = ' default',
+            styling_input_path: str = 'default',
             company_information_input_path: str = 'default',
             labour_type_information_input_path: str = 'default'
             ) -> None:
@@ -111,7 +113,7 @@ class InvoiceGenerator:
     
     @staticmethod
     def _get_default_styling_input_path() -> str:
-        return read_env_variable("DEFAULT_STYLEING_INPUT_PATH")
+        return read_env_variable("DEFAULT_STYLING_INPUT_PATH")
     
     @staticmethod
     def _get_default_company_information_path() -> str:
@@ -138,6 +140,7 @@ class InvoiceGenerator:
         
         company_info_input: DataListBase = read_company_input(self.configurations.company_information_input)
         labour_type_input: DataListBase = read_labour_type_input(self.configurations.labour_type_information_input)
+        style_setting_input: StyleSettingsInputPackage = read_styling_settings(self.configurations.document_styling_input)
 
         for file_path in input_files:
 
@@ -166,3 +169,19 @@ class InvoiceGenerator:
                 print("rendering pdf document for output:", output_path)
 
             invoice_document.render(output_path)
+
+
+            test_invoice_document = InvoicePDFWithStyleInput(
+                input_package=invoice_template_input,
+                styling_settings=style_setting_input
+            )
+
+            test_output_path: str = os.path.join(
+                os.path.abspath(self.configurations.output_folder),
+                "test_" + self._render_filename_from_path(file_path) + self.configurations.file_format
+                )
+            
+            if verbose:
+                print("rendering pdf document for output:", test_output_path)
+
+            test_invoice_document.render(test_output_path)

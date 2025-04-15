@@ -4,10 +4,11 @@ Sctipt containing the invoice class.
 This class is responsible for and implements the structure of 
 the generated pdf pages.
 """
-import os
+from datetime import datetime, timedelta
+
 from fpdf import FPDF, XPos, YPos
 
-from typing import List
+from typing import Optional
 
 from cream_invoice_machine.templates.flex_template_test import InvoiceHeaderTemplate
 from cream_invoice_machine.models.dataclasses import (
@@ -232,13 +233,12 @@ class InvoicePDFTemplate(FPDF):
         self.cell(30, 10, f"{total_incl_btw:.2f} EUR", border=1, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
 
 
+
+
 class InvoicePDFWithStyleInput(FPDF):
     def __init__(
             self,
             input_package: InvoiceTemplateInput = None,
-            invoice_details: InvoiceDetails = None,
-            company_details: CompanyDetails = None,
-            invoice_items: InvoiceCostItems = None,
             styling_settings: StyleSettingsInputPackage = None, 
             orientation = "portrait", 
             unit = "mm", 
@@ -246,21 +246,34 @@ class InvoicePDFWithStyleInput(FPDF):
             font_cache_dir = "DEPRECATED"
             ) -> None:
         super().__init__(orientation, unit, format, font_cache_dir)
-        
+        self.input_package: Optional[InvoiceTemplateInput] = input_package
+        self.styling_settings: Optional[StyleSettingsInputPackage] = styling_settings
+
+
+    def render(self, path: str) -> None:
+        self.output(path)
+
     def header(self):
         # Bedrijfsnaam
-        self.set_font('Helvetica', '', 12)
+        self.set_font(self.styling_settings.general.font, self.styling_settings.header.font_style, self.styling_settings.header.font_size)
         self.image('resources\\logo\\logo_white.png', 10, 8, 33)  # Adjust the path and size as needed
         self.cell(0, 10, "Factuur",  new_x=XPos.LMARGIN, new_y=YPos.NEXT, align="C")
         self.ln(10)  # Lijnbreuk
 
     def footer(self):
+        # bereken deadline
+        deadline_datum: datetime = datetime.today() + timedelta(days=30)
+        datum_string: str = deadline_datum.strftime("%d-%m-%Y")
+
+        bedrijf_naam: str = self.input_package.company_details.name
+        iban: str = self.input_package.company_details.iban
         # Pagina-nummer
         self.set_y(-30)
-        self.set_font('Helvetica', '', 8)
+        self.set_font(self.styling_settings.general.font, self.styling_settings.footer.font_style, self.styling_settings.footer.font_size)
         self.multi_cell(0, 10, 
-            "Te betalen binnen 30 dagen (voor DD-MM-YYYY) op rekeningnummer NL12BANK0123456789\n"
-            "t.n.v. STUKADOORSBEDRIJF onder vermelding van klantnummer en factuurnummer.", 
+            f"Te betalen binnen 30 dagen (voor {datum_string}) op rekeningnummer {iban}\n"
+            f"t.n.v. {bedrijf_naam} onder vermelding van klantnummer en factuurnummer.", 
             align='C'
         )
         self.cell(0, 10, f"Pagina {self.page_no()}", align="C")
+
