@@ -162,6 +162,7 @@ class InvoiceGeneratorConfigurations:
     file_format: str
     user_input_folder: str
     output_folder: str
+    document_styling_input: str
     company_information_input: str
     labour_type_information_input: str
 

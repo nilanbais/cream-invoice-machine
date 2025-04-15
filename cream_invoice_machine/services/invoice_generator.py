@@ -15,8 +15,7 @@ from cream_invoice_machine.utils.helper_functions import (
     )
 from cream_invoice_machine.templates.pdf import (
     InvoicePDF, 
-    InvoicePDFTemplate, 
-    TESTInvoicePDF
+    InvoicePDFTemplate
     )
 from cream_invoice_machine.models.dataclasses import (
     InvoiceDetails, 
@@ -66,13 +65,6 @@ def generate_invoice_pdf_on_path(input_path: str, output_path: str) -> None:
     render_pdf_object(pdf_object, output_path)
 
 
-def invoice_generator_test(invoice_details: InvoiceDetails, invoice_items: InvoiceCostItems, output_path: str) -> InvoicePDF:
-    pdf_object = TESTInvoicePDF()
-    pdf_object.add_client_info(invoice_details.customer_name, invoice_details.customer_address)
-    pdf_object.add_invoice_table(invoice_items)
-    pdf_object.output(output_path)
-
-
 class InvoiceGenerator:
 
     def __init__(self) -> None:
@@ -84,6 +76,7 @@ class InvoiceGenerator:
             file_format: str = 'pdf',
             user_input_folder: str = 'default',
             output_folder: str = 'default',
+            styling_input_path: str = ' default',
             company_information_input_path: str = 'default',
             labour_type_information_input_path: str = 'default'
             ) -> None:
@@ -91,6 +84,7 @@ class InvoiceGenerator:
         file_format = '.' + file_format if '.' not in file_format else file_format
         user_input_folder: str = self._get_default_user_input_folder() if user_input_folder == 'default' else user_input_folder
         output_folder: str = self._get_default_output_folder() if output_folder == 'default' else output_folder
+        styling_input_path: str = self._get_default_styling_input_path() if styling_input_path == 'default' else styling_input_path
         company_information_input_path: str = self._get_default_company_information_path() if company_information_input_path == 'default' else company_information_input_path
         labour_type_information_input_path: str = self._get_default_labour_type_information_path() if labour_type_information_input_path == 'default' else labour_type_information_input_path
 
@@ -98,6 +92,7 @@ class InvoiceGenerator:
             file_format=file_format,
             user_input_folder=user_input_folder,
             output_folder=output_folder,
+            document_styling_input=styling_input_path,
             company_information_input=company_information_input_path,
             labour_type_information_input=labour_type_information_input_path
         )
@@ -113,6 +108,10 @@ class InvoiceGenerator:
     @staticmethod
     def _get_default_output_folder() -> str:
         return read_env_variable("DEFAULT_OUTPUT_FOLDER_PATH")
+    
+    @staticmethod
+    def _get_default_styling_input_path() -> str:
+        return read_env_variable("DEFAULT_STYLEING_INPUT_PATH")
     
     @staticmethod
     def _get_default_company_information_path() -> str:
