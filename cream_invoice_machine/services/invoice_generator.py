@@ -155,9 +155,10 @@ class InvoiceGenerator:
                 job_details_input=job_information
                 )
             
-            invoice_document = InvoicePDFTemplate(
-                input_package=invoice_template_input
-                )
+            invoice_document = InvoicePDFWithStyleInput(
+                input_package=invoice_template_input,
+                styling_settings=style_setting_input
+            )
 
 
             output_path: str = os.path.join(
@@ -169,19 +170,3 @@ class InvoiceGenerator:
                 print("rendering pdf document for output:", output_path)
 
             invoice_document.render(output_path)
-
-
-            test_invoice_document = InvoicePDFWithStyleInput(
-                input_package=invoice_template_input,
-                styling_settings=style_setting_input
-            )
-
-            test_output_path: str = os.path.join(
-                os.path.abspath(self.configurations.output_folder),
-                "test_" + self._render_filename_from_path(file_path) + self.configurations.file_format
-                )
-            
-            if verbose:
-                print("rendering pdf document for output:", test_output_path)
-
-            test_invoice_document.render(test_output_path)
