@@ -16,7 +16,6 @@ from cream_invoice_machine.models.dataclasses import (
     JobDetailsInput,
     ClientDetails,
     JobCalculationDetails,
-    StyleSettings,
     StyleSettingsInputPackage
     )
 
@@ -122,6 +121,7 @@ def read_styling_settings(file_path: str) -> StyleSettingsInputPackage:
         "invoice_items",
         "table"
         ]
+    
     missing_items: list = [item for item in reference_list if item not in raw_data.keys()]
 
     for item in missing_items:

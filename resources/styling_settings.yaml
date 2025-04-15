@@ -9,9 +9,13 @@ footer:
 invoice_details:
   font-size: 10
   font-style: ""
+  cell-width: 100
+  cell-height: 6
 company_details:
   font-size: 8
   font-style: "B"
+  cell-width: 0
+  cell-height: 6
 invoice_items:
   font-size: 10
   font-style: ""

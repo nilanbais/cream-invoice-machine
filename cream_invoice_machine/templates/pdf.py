@@ -254,10 +254,12 @@ class InvoicePDFWithStyleInput(FPDF):
     def create_invoice(self) -> None:
         self.add_page()
         self.add_invoice_details()
+        self.add_company_details()
 
 
     def render(self, path: str) -> None:
         self.output(path)
+
 
     def header(self):
         # Bedrijfsnaam
@@ -265,6 +267,7 @@ class InvoicePDFWithStyleInput(FPDF):
         self.image('resources\\logo\\logo_white.png', 10, 8, 33)  # Adjust the path and size as needed
         self.cell(0, 10, "Factuur",  new_x=XPos.LMARGIN, new_y=YPos.NEXT, align="C")
         self.ln(10)  # Lijnbreuk
+
 
     def footer(self):
         # bereken deadline
@@ -285,20 +288,57 @@ class InvoicePDFWithStyleInput(FPDF):
 
 
     def add_invoice_details(self):
-        self.set_font(self.styling_settings.general.font, self.styling_settings.invoice_details.font_style, self.styling_settings.invoice_details.font_size)
+        self.set_font(
+            self.styling_settings.general.font, 
+            self.styling_settings.invoice_details.font_style, 
+            self.styling_settings.invoice_details.font_size
+            )
         
-        self.cell(100, 10, f"Factuurnummer: {self.input_package.invoice_details.invoice_number}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-        self.cell(100, 10, f"Datum: {self.input_package.invoice_details.date}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-        self.cell(100, 10, f"Naam klant: {self.input_package.invoice_details.customer_name}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-        self.cell(100, 10, f"Adres klant: {self.input_package.invoice_details.customer_address}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        self.cell(
+            self.styling_settings.invoice_details.cell_width, 
+            self.styling_settings.invoice_details.cell_height, 
+            f"Factuurnummer: {self.input_package.invoice_details.invoice_number}", 
+            new_x=XPos.LMARGIN, 
+            new_y=YPos.NEXT
+            )
+        self.cell(
+            self.styling_settings.invoice_details.cell_width, 
+            self.styling_settings.invoice_details.cell_height, 
+            f"Datum: {self.input_package.invoice_details.date}", 
+            new_x=XPos.LMARGIN, 
+            new_y=YPos.NEXT
+            )
+        self.cell(
+            self.styling_settings.invoice_details.cell_width, 
+            self.styling_settings.invoice_details.cell_height, 
+            f"Naam klant: {self.input_package.invoice_details.customer_name}", 
+            new_x=XPos.LMARGIN, 
+            new_y=YPos.NEXT
+            )
+        self.cell(
+            self.styling_settings.invoice_details.cell_width, 
+            self.styling_settings.invoice_details.cell_height, 
+            f"Adres klant: {self.input_package.invoice_details.customer_address}", 
+            new_x=XPos.LMARGIN, 
+            new_y=YPos.NEXT
+            )
         
         self.ln(10)
 
 
     def add_company_details(self):
-        self.set_font(self.styling_settings.general.font, self.styling_settings.company_details.font_style, self.styling_settings.company_details.font_size)
-        self.set_xy(140, 20)
-        self.multi_cell(0, 8, 
+        self.set_font(
+            self.styling_settings.general.font, 
+            self.styling_settings.company_details.font_style, 
+            self.styling_settings.company_details.font_size
+            )
+        
+        # self.set_xy(140, 20)
+        self.set_xy(145, 27.5)
+
+        self.multi_cell(
+            self.styling_settings.company_details.cell_width,
+            self.styling_settings.company_details.cell_height,
             f"{self.input_package.company_details.name}\n"
             f"{self.input_package.company_details.address}\n"
             f"{self.input_package.company_details.postcode}, {self.input_package.company_details.city}\n"

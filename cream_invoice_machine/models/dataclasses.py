@@ -172,6 +172,8 @@ class StyleSettings:
     font: Optional[str] = None
     font_size: Optional[int] = None
     font_style: Optional[str] = None
+    cell_width: Optional[str] = None
+    cell_height: Optional[str] = None
     border: Optional[int] = None
 
 

@@ -28,7 +28,15 @@ def basename_from_path(path: str) -> str:
 def style_settings_from_dict(input_dict: Optional[dict] = None) -> StyleSettings:
     raw_dict: dict = {} if input_dict is None else input_dict
 
-    reference_list: list = ["font", "font-size", "font-style", "border"]
+    reference_list: list = [
+        "font", 
+        "font-size", 
+        "font-style",
+        "cell-width",
+        "cell-height",        
+        "border"
+        ]
+    
     missing_items: list = [item for item in reference_list if item not in input_dict.keys()]
     
     for item in missing_items:
@@ -38,6 +46,8 @@ def style_settings_from_dict(input_dict: Optional[dict] = None) -> StyleSettings
         font=raw_dict['font'],
         font_size=raw_dict['font-size'],
         font_style=raw_dict['font-style'],
+        cell_width=raw_dict['cell-width'],
+        cell_height=raw_dict['cell-height'],
         border=raw_dict['border']
     )
 
