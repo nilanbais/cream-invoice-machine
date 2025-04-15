@@ -43,7 +43,12 @@ class DataListBase(Generic[TYPE_PLACEHOLDER]):
         return None
 
 
-
+@dataclass
+class JobCalculationDetails:
+    btw_percentage: int  # x%
+    round_up: int  # 10: 123 => 130 , 100: 167 => 200 
+    extra_fixed: float
+    
 
 @dataclass
 class InvoiceDetails:
@@ -51,6 +56,7 @@ class InvoiceDetails:
     date: str
     customer_name: str
     customer_address: str
+    calculation_info: JobCalculationDetails
 
 
 @dataclass
@@ -138,13 +144,6 @@ class ClientDetails:
     address: str
     post_code: str
     city: str
-
-
-@dataclass
-class JobCalculationDetails:
-    btw_percentage: int  # x%
-    round_up: int  # 10: 123 => 130 , 100: 167 => 200 
-    extra_fixed: float
 
 
 @dataclass

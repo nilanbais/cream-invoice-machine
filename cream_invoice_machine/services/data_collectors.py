@@ -66,7 +66,8 @@ def collect_invoice_details(
         invoice_number="moet deze nog wel??",
         date=invoice_date,
         customer_name=job_details_input.client_info.name,
-        customer_address=full_address
+        customer_address=full_address,
+        calculation_info=job_details_input.calculation_info
     )
 
     return invoice_details

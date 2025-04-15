@@ -248,6 +248,12 @@ class InvoicePDFWithStyleInput(FPDF):
         super().__init__(orientation, unit, format, font_cache_dir)
         self.input_package: Optional[InvoiceTemplateInput] = input_package
         self.styling_settings: Optional[StyleSettingsInputPackage] = styling_settings
+        self.create_invoice()
+
+
+    def create_invoice(self) -> None:
+        self.add_page()
+        self.add_invoice_details()
 
 
     def render(self, path: str) -> None:
@@ -277,3 +283,71 @@ class InvoicePDFWithStyleInput(FPDF):
         )
         self.cell(0, 10, f"Pagina {self.page_no()}", align="C")
 
+
+    def add_invoice_details(self):
+        self.set_font(self.styling_settings.general.font, self.styling_settings.invoice_details.font_style, self.styling_settings.invoice_details.font_size)
+        
+        self.cell(100, 10, f"Factuurnummer: {self.input_package.invoice_details.invoice_number}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        self.cell(100, 10, f"Datum: {self.input_package.invoice_details.date}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        self.cell(100, 10, f"Naam klant: {self.input_package.invoice_details.customer_name}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        self.cell(100, 10, f"Adres klant: {self.input_package.invoice_details.customer_address}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        
+        self.ln(10)
+
+
+    def add_company_details(self):
+        self.set_font(self.styling_settings.general.font, self.styling_settings.company_details.font_style, self.styling_settings.company_details.font_size)
+        self.set_xy(140, 20)
+        self.multi_cell(0, 8, 
+            f"{self.input_package.company_details.name}\n"
+            f"{self.input_package.company_details.address}\n"
+            f"{self.input_package.company_details.postcode}, {self.input_package.company_details.city}\n"
+            f"{self.input_package.company_details.phone}\n"
+            f"{self.input_package.company_details.email}\n"
+            f"{self.input_package.company_details.kvk_number}\n"
+            f"{self.input_package.company_details.btw_number}\n"
+            f"{self.input_package.company_details.iban}",
+            align='L'
+        )
+
+
+    def add_invoice_items(self):
+        self.set_xy(10, 100)
+        # Header for the items table
+        self.set_font(self.styling_settings.general.font, self.styling_settings.invoice_items.font_style, self.styling_settings.invoice_items.font_size)
+
+        self.cell(100, 10, 'Omschrijving', border=self.styling_settings.table.border)
+        self.cell(30, 10, 'Aantal', border=self.styling_settings.table.border)
+        self.cell(30, 10, 'Prijs', border=self.styling_settings.table.border)
+        self.cell(30, 10, 'Totaal', border=self.styling_settings.table.border)
+        self.ln()
+
+        # Reset font for items
+        self.set_font(self.styling_settings.general.font, self.styling_settings.invoice_items.font_style, self.styling_settings.invoice_items.font_size)
+
+        total_amount = 0
+        for item in self.input_package.invoice_items.entries:
+            description = item.description
+            quantity = item.quantity
+            price = item.unit_price
+            line_total = quantity * price
+            total_amount += line_total
+
+            # Add item row
+            self.cell(100, 10, description, border=self.styling_settings.table.border)
+            self.cell(30, 10, str(quantity), border=self.styling_settings.table.border)
+            self.cell(30, 10, f"{price:.2f} EUR", border=self.styling_settings.table.border)
+            self.cell(30, 10, f"{line_total:.2f} EUR", border=self.styling_settings.table.border)
+            self.ln()
+
+        btw_amount = total_amount * self.input_package.invoice_details.calculation_info.btw_percentage
+        total_incl_btw = total_amount + btw_amount
+
+        # Total amount
+        self.set_font('Helvetica', '', 10)
+        self.cell(160, 10, 'Totaal excl BTW:', border=self.styling_settings.table.border)
+        self.cell(30, 10, f"{total_amount:.2f} EUR", border=self.styling_settings.table.border, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        self.cell(160, 10, '21% BTW:', border=self.styling_settings.table.border)
+        self.cell(30, 10, f"{btw_amount:.2f} EUR", border=self.styling_settings.table.border, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        self.cell(160, 10, 'Totaal incl. BTW:', border=self.styling_settings.table.border)
+        self.cell(30, 10, f"{total_incl_btw:.2f} EUR", border=self.styling_settings.table.border, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
