@@ -1,15 +1,13 @@
 import os
 from datetime import datetime
 
-from typing import List
+from typing import List, Optional
 
 from cream_invoice_machine.utils.file_readers import read_env_variable
 from cream_invoice_machine.models.dataclasses import (
     InvoiceLineItem, 
     InvoiceCostItems,
-    JobDetailsInput,
-    ClientDetails,
-    JobCalculationDetails
+    StyleSettings
     )
 
 
@@ -25,6 +23,25 @@ def list_files(path: str) -> list:
 def basename_from_path(path: str) -> str:
     normpath = os.path.normpath(path)
     return os.path.basename(normpath)
+
+
+def style_settings_from_dict(input_dict: Optional[dict] = None) -> StyleSettings:
+    raw_dict: dict = {} if input_dict is None else input_dict
+
+    reference_list: list = ["font", "font-size", "font-style", "border"]
+    missing_items: list = [item for item in reference_list if item not in input_dict.keys()]
+    
+    for item in missing_items:
+        raw_dict[item] = None
+
+    style_settings: StyleSettings = StyleSettings(
+        font=raw_dict['font'],
+        font_size=raw_dict['font-size'],
+        font_style=raw_dict['font-style'],
+        border=raw_dict['border']
+    )
+
+    return style_settings
 
 
 def flatten_list_of_dicts(input_list: List[dict]) -> dict:
@@ -51,35 +68,3 @@ def invoice_items_from_list(input_list: List[dict]) -> InvoiceCostItems:
     # Convert dictionaries to InvoiceItem instances
     invoice_items: List[InvoiceLineItem] = [InvoiceLineItem(**item) for item in input_list]
     return InvoiceCostItems(entries=invoice_items)
-
-
-def job_details_from_yaml_data(yaml_data: dict) -> JobDetailsInput:
-    raw_data = yaml_data
-
-    if raw_data['date'] == 'auto':
-        invoice_date = str(datetime.now().date())
-    else:
-        invoice_date = raw_data['date']
-
-    raw_client_data = raw_data['klant-info']
-    raw_work_data = raw_data['werk']
-    raw_calc_info_data = raw_data['extra']
-
-    job_details_input = JobDetailsInput(
-        job_name=raw_data['invoice'],
-        date=invoice_date,
-        client_info=ClientDetails(
-            name=raw_client_data['naam'],
-            address=raw_client_data['adres'],
-            post_code=raw_client_data['postcode'],
-            city=raw_client_data['plaats']
-        ),
-        work_details=raw_work_data,
-        calculation_info=JobCalculationDetails(
-            btw_percentage=raw_calc_info_data['btw'],
-            round_up=raw_calc_info_data['onvoorzien']['afronding'],
-            extra_fixed=raw_calc_info_data['onvoorzien']['bijtelling']
-        )
-    )
-
-    return job_details_input

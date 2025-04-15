@@ -5,6 +5,7 @@ from typing import List, Generic, TypeVar, Any, Optional
 
 TYPE_PLACEHOLDER = TypeVar('T')
 
+
 @dataclass
 class DataListBase(Generic[TYPE_PLACEHOLDER]):
     """
@@ -163,3 +164,23 @@ class InvoiceGeneratorConfigurations:
     output_folder: str
     company_information_input: str
     labour_type_information_input: str
+
+
+
+@dataclass
+class StyleSettings:
+    font: Optional[str] = None
+    font_size: Optional[int] = None
+    font_style: Optional[str] = None
+    border: Optional[int] = None
+
+
+@dataclass
+class StyleSettingsInputPackage:
+    general: Optional[StyleSettings] 
+    header: Optional[StyleSettings]
+    footer: Optional[StyleSettings]
+    company_details: Optional[StyleSettings]
+    invoice_details: Optional[StyleSettings]
+    invoice_items: Optional[StyleSettings] 
+    table: Optional[StyleSettings]
