@@ -255,6 +255,7 @@ class InvoicePDFWithStyleInput(FPDF):
         self.add_page()
         self.add_invoice_details()
         self.add_company_details()
+        self.add_invoice_items()
 
 
     def render(self, path: str) -> None:
@@ -354,40 +355,132 @@ class InvoicePDFWithStyleInput(FPDF):
     def add_invoice_items(self):
         self.set_xy(10, 100)
         # Header for the items table
-        self.set_font(self.styling_settings.general.font, self.styling_settings.invoice_items.font_style, self.styling_settings.invoice_items.font_size)
+        self.set_font(
+            self.styling_settings.general.font, 
+            "B", 
+            self.styling_settings.invoice_items.font_size
+            )
 
-        self.cell(100, 10, 'Omschrijving', border=self.styling_settings.table.border)
-        self.cell(30, 10, 'Aantal', border=self.styling_settings.table.border)
-        self.cell(30, 10, 'Prijs', border=self.styling_settings.table.border)
-        self.cell(30, 10, 'Totaal', border=self.styling_settings.table.border)
-        self.ln()
+        with self.table() as table:
+            header_row = table.row()
+            header_row.cell('Omschrijving')
+            header_row.cell('Aantal')
+            header_row.cell('Prijs')
+            header_row.cell('Totaal')
 
-        # Reset font for items
-        self.set_font(self.styling_settings.general.font, self.styling_settings.invoice_items.font_style, self.styling_settings.invoice_items.font_size)
+            total_invoice_cost_excl_btw: float = 0.0
+            for line_item in self.input_package.invoice_items.entries:
+                row = table.row()
 
-        total_amount = 0
-        for item in self.input_package.invoice_items.entries:
-            description = item.description
-            quantity = item.quantity
-            price = item.unit_price
-            line_total = quantity * price
-            total_amount += line_total
+                description = line_item.description
+                quantity = line_item.quantity
+                price = line_item.unit_price
+                line_total = quantity * price
+                total_invoice_cost_excl_btw += line_total
 
-            # Add item row
-            self.cell(100, 10, description, border=self.styling_settings.table.border)
-            self.cell(30, 10, str(quantity), border=self.styling_settings.table.border)
-            self.cell(30, 10, f"{price:.2f} EUR", border=self.styling_settings.table.border)
-            self.cell(30, 10, f"{line_total:.2f} EUR", border=self.styling_settings.table.border)
-            self.ln()
+                row_data: tuple = (description, str(quantity), f"{price:.2f} EUR", f"{line_total:.2f}")
+                for value in row_data:
+                    row.cell(value)
 
-        btw_amount = total_amount * self.input_package.invoice_details.calculation_info.btw_percentage
-        total_incl_btw = total_amount + btw_amount
 
-        # Total amount
-        self.set_font('Helvetica', '', 10)
-        self.cell(160, 10, 'Totaal excl BTW:', border=self.styling_settings.table.border)
-        self.cell(30, 10, f"{total_amount:.2f} EUR", border=self.styling_settings.table.border, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-        self.cell(160, 10, '21% BTW:', border=self.styling_settings.table.border)
-        self.cell(30, 10, f"{btw_amount:.2f} EUR", border=self.styling_settings.table.border, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-        self.cell(160, 10, 'Totaal incl. BTW:', border=self.styling_settings.table.border)
-        self.cell(30, 10, f"{total_incl_btw:.2f} EUR", border=self.styling_settings.table.border, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+            btw_amount = total_invoice_cost_excl_btw * (self.input_package.invoice_details.calculation_info.btw_percentage / 100)  # btw_percentage: int = 9 means 9%
+            total_invoice_cost_incl_btw = total_invoice_cost_excl_btw + btw_amount
+
+            total_excl_btw_row_data: tuple = ('Totaal excl BTW:', None, None, str(total_invoice_cost_excl_btw))
+            total_excl_btw_row = table.row()
+            for value in total_excl_btw_row_data:
+                    total_excl_btw_row.cell(value)
+
+
+            btw_row_data: tuple = (
+                f'{self.input_package.invoice_details.calculation_info.btw_percentage}% BTW:', 
+                None, 
+                None, 
+                str(btw_amount)
+                )
+            btw_row = table.row()
+            for value in btw_row_data:
+                    btw_row.cell(value)
+
+
+            total_incl_btw_row_data: tuple = ('Totaal incl. BTW:', None, None, str(total_invoice_cost_incl_btw))
+            total_incl_btw_row = table.row()
+            for value in total_incl_btw_row_data:
+                    total_incl_btw_row.cell(value)
+
+
+        # self.cell(100, 10, 'Omschrijving', border=self.styling_settings.table.border)
+        # self.cell(30, 10, 'Aantal', border=self.styling_settings.table.border)
+        # self.cell(30, 10, 'Prijs', border=self.styling_settings.table.border)
+        # self.cell(30, 10, 'Totaal', border=self.styling_settings.table.border)
+        # self.ln()
+
+        # # Reset font for items
+        # self.set_font(self.styling_settings.general.font, self.styling_settings.invoice_items.font_style, self.styling_settings.invoice_items.font_size)
+
+        # total_amount = 0
+        # for item in self.input_package.invoice_items.entries:
+        #     description = item.description
+        #     quantity = item.quantity
+        #     price = item.unit_price
+        #     line_total = quantity * price
+        #     total_amount += line_total
+
+        #     # Add item row
+        #     self.cell(100, 10, description, border=self.styling_settings.table.border)
+        #     self.cell(30, 10, str(quantity), border=self.styling_settings.table.border)
+        #     self.cell(30, 10, f"{price:.2f} EUR", border=self.styling_settings.table.border)
+        #     self.cell(30, 10, f"{line_total:.2f} EUR", border=self.styling_settings.table.border)
+        #     self.ln()
+
+        # btw_amount = total_amount * (self.input_package.invoice_details.calculation_info.btw_percentage / 100)  # btw_percentage: int = 9 means 9%
+        # total_incl_btw = total_amount + btw_amount
+
+        # # Total amount
+        # self.set_font('Helvetica', '', 10)
+        # self.cell(
+        #     160, 
+        #     10, 
+        #     'Totaal excl BTW:',
+        #     border=self.styling_settings.table.border
+        #     )
+        # self.cell(
+        #     30, 
+        #     10, 
+        #     f"{total_amount:.2f} EUR",
+        #     border=self.styling_settings.table.border, 
+        #     new_x=XPos.LMARGIN, 
+        #     new_y=YPos.NEXT
+        #     )
+        # self.cell(
+        #     160, 
+        #     10, 
+        #     f'{self.input_package.invoice_details.calculation_info.btw_percentage}% BTW:',
+        #     border=self.styling_settings.table.border
+        #     )
+        # self.cell(
+        #     30, 
+        #     10, 
+        #     f"{btw_amount:.2f} EUR",
+        #     border=self.styling_settings.table.border, 
+        #     new_x=XPos.LMARGIN, 
+        #     new_y=YPos.NEXT
+        #     )
+        # self.cell(
+        #     160, 
+        #     10, 
+        #     'Totaal incl. BTW:',
+        #     border=self.styling_settings.table.border
+        #     )
+        # self.cell(
+        #     30, 
+        #     10, 
+        #     f"{total_incl_btw:.2f} EUR",
+        #     border=self.styling_settings.table.border, 
+        #     new_x=XPos.LMARGIN, 
+        #     new_y=YPos.NEXT
+        #     )
+
+
+
+
