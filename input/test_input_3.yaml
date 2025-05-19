@@ -26,5 +26,5 @@ werk:
 extra:
   btw: 21
   onvoorzien:
-    afronding: 10
-    bijtelling: 0
+    afronding: 1000
+    bijtelling: 2000

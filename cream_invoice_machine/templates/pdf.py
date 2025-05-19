@@ -4,6 +4,7 @@ Sctipt containing the invoice class.
 This class is responsible for and implements the structure of 
 the generated pdf pages.
 """
+import math
 from datetime import datetime, timedelta
 
 from fpdf import FPDF, XPos, YPos
@@ -374,6 +375,7 @@ class InvoicePDFWithStyleInput(FPDF):
             header_row.cell('Prijs (EUR) per unit')
             header_row.cell('Totaal (EUR)')
 
+            ## Invoice line items + unforseeable cost
             total_invoice_cost_excl_btw: float = 0.0
             for line_item in self.input_package.invoice_items.entries:
                 row = table.row()
@@ -389,16 +391,30 @@ class InvoicePDFWithStyleInput(FPDF):
                 for value in row_data:
                     row.cell(value)
 
+            ## Unforeseeable cost as line item
+            unforeseeable_cost_data: tuple = (
+                "Onvoorziene kosten",
+                None,
+                None,
+                None,
+                f"{self.input_package.invoice_details.calculation_info.extra_fixed:.2f}"
+                )
+            unforeseeable_cost_row = table.row()
+            for value in unforeseeable_cost_data:
+                unforeseeable_cost_row.cell(value)
 
+            total_invoice_cost_excl_btw += self.input_package.invoice_details.calculation_info.extra_fixed
+
+            ## Total excl. tax
             btw_amount = total_invoice_cost_excl_btw * (self.input_package.invoice_details.calculation_info.btw_percentage / 100)  # btw_percentage: int = 9 means 9%
             total_invoice_cost_incl_btw = total_invoice_cost_excl_btw + btw_amount
 
             total_excl_btw_row_data: tuple = ('Totaal excl BTW:', None, None, None, str(total_invoice_cost_excl_btw))
             total_excl_btw_row = table.row()
             for value in total_excl_btw_row_data:
-                    total_excl_btw_row.cell(value, border='TOP')
+                total_excl_btw_row.cell(value, border='TOP')
 
-
+            ## Tax
             btw_row_data: tuple = (
                 f'{self.input_package.invoice_details.calculation_info.btw_percentage}% BTW:', 
                 None, 
@@ -408,11 +424,30 @@ class InvoicePDFWithStyleInput(FPDF):
                 )
             btw_row = table.row()
             for value in btw_row_data:
-                    btw_row.cell(value, border='TOP')
+                btw_row.cell(value, border='TOP')
 
-
-            total_incl_btw_row_data: tuple = ('Totaal incl. BTW:', None, None, None, f"{total_invoice_cost_incl_btw:.2f}")
+            ## Total incl. tax
+            total_incl_btw_row_data: tuple = (
+                'Totaal incl. BTW:', 
+                None, 
+                None, 
+                None, 
+                f"{total_invoice_cost_incl_btw:.2f}"
+                )
             total_incl_btw_row = table.row()
             for value in total_incl_btw_row_data:
-                    total_incl_btw_row.cell(value, border='TOP')
-
+                total_incl_btw_row.cell(value, border='TOP')
+           
+            ## Total after roundup
+            roundup_factor: int = self.input_package.invoice_details.calculation_info.round_up
+            total_cost_rounded_up: int = math.ceil(total_invoice_cost_incl_btw / roundup_factor) * roundup_factor
+            total_cost_rounded_up_data: tuple = (
+                'Totaal incl. BTW (na afronding):', 
+                None, 
+                None, 
+                None, 
+                f"{total_cost_rounded_up:.2f}"
+                )
+            total_cost_rounded_up_row = table.row()
+            for value in total_cost_rounded_up_data:
+                total_cost_rounded_up_row.cell(value, border='TOP')
