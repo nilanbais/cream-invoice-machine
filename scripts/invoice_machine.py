@@ -14,7 +14,7 @@ def main() -> None:
     # config env variables (oragisation info among other standard variables)
     generator = InvoiceGenerator()
     
-    generator.generate_invoices_from_set_configuration()
+    generator.generate_invoices()
 
 
 if __name__ == "__main__":

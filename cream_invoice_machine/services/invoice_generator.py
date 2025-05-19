@@ -133,6 +133,10 @@ class InvoiceGenerator:
         today_str = datetime.today().strftime("%d_%m_%Y")
         render_filename: str = str().join([f"render_{today_str}_", basename])
         return render_filename
+    
+    def generate_invoices(self, use_set_cofig: bool = True, verbose: bool = False) -> None:
+        if use_set_cofig:
+            self.generate_invoices_from_set_configuration(verbose)
 
     def generate_invoices_from_set_configuration(self, verbose: bool = False) -> None:
         # get list of input files
